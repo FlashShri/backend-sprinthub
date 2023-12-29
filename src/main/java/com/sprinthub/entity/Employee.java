@@ -1,35 +1,45 @@
 package com.sprinthub.entity;
 
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="manager")
-public class Manager {
+@Table(name="employee")
+public class Employee {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int managerId; 
-	
+	private int employeeId;
+
 	private String fullName;
 	private String email;
 	private String password;
 	private long phoneNumber;
 	private String city;
 
-	 @OneToOne(mappedBy = "manager")
-	 private Project project;
 	
-	public int getManagerId() {
-		return managerId;
+	@OneToOne
+	@JoinColumn(name = "designationId")
+	private Designation designation;
+
+
+	@OneToMany(mappedBy = "employee")
+    private Set<AssignmentMapping> projectEmployeeMappings;
+
+	public int getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setManagerId(int managerId) {
-		this.managerId = managerId;
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
 	}
 
 	public String getPassword() {
@@ -71,5 +81,22 @@ public class Manager {
 	public void setCity(String city) {
 		this.city = city;
 	}
+
+	public Set<AssignmentMapping> getProjectEmployeeMappings() {
+		return projectEmployeeMappings;
+	}
+
+	public void setProjectEmployeeMappings(Set<AssignmentMapping> projectEmployeeMappings) {
+		this.projectEmployeeMappings = projectEmployeeMappings;
+	}
+
+	public Designation getDesignation() {
+		return designation;
+	}
+
+	public void setDesignation(Designation designation) {
+		this.designation = designation;
+	}
+
 
 }
