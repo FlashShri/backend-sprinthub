@@ -6,16 +6,23 @@ import org.springframework.stereotype.Service;
 import com.sprinthub.entity.Designation;
 import com.sprinthub.entity.Employee;
 import com.sprinthub.exception.customerServiceException;
+import com.sprinthub.repository.AssignmentMappingRepository;
 import com.sprinthub.repository.EmployeeRepository;
+
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    
+    @Autowired
+    private AssignmentMappingRepository assignmentMappingRepository;
 
     //1. Create Employee (Sign Up)
     public Employee register(Employee employee) {
@@ -91,5 +98,10 @@ public class EmployeeService {
         employee.setDesignation(newDesignation);
         
         return employeeRepository.save(employee);
+    }
+
+    //8. fetch all employees by projectID
+    public List<Employee> getEmployeesByProjectId(int projectId) {
+        return assignmentMappingRepository.findEmployeesByProjectId(projectId);
     }
 }
