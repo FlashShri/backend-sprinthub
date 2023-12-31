@@ -73,4 +73,16 @@ public class EmployeeServiceController {
         return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
     
+    
+    @GetMapping("/byProject/{projectId}")
+    public ResponseEntity<List<Employee>> getEmployeesByProjectId(@PathVariable int projectId) {
+        List<Employee> employees = employeeService.getEmployeesByProjectId(projectId);
+
+        if (employees.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // No employees found for the given project
+        } else {
+            return new ResponseEntity<>(employees, HttpStatus.OK);
+        }
+    }
+    
 }
