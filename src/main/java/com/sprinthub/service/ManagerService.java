@@ -5,11 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.sprinthub.dto.ManagerDTO;
 import com.sprinthub.entity.Manager;
 import com.sprinthub.exception.ManagerServiceException;
 import com.sprinthub.repository.ManagerRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ManagerService {
@@ -34,6 +37,23 @@ public class ManagerService {
                       .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+    public List<ManagerDTO> getAllManagers() {
+        List<Manager> managers = managerRepository.findAll();
+        return managers.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ManagerDTO convertToDTO(Manager manager) {
+        ManagerDTO dto = new ManagerDTO();
+        dto.setManagerId(manager.getManagerId());
+        dto.setFullName(manager.getFullName());
+        dto.setEmail(manager.getEmail());
+        dto.setPhoneNumber(manager.getPhoneNumber());
+        dto.setCity(manager.getCity());
+        return dto;
+    }
+    
     public ResponseEntity<?> getManagerByEmail(String email) {
         Optional<Manager> manager = managerRepository.findByEmail(email);
         return manager.map(value -> ResponseEntity.ok().body(value))
