@@ -1,14 +1,21 @@
 package com.sprinthub.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sprinthub.entity.AssignmentMapping;
+import com.sprinthub.entity.Employee;
 import com.sprinthub.entity.Manager;
 import com.sprinthub.entity.Project;
 import com.sprinthub.exception.ProjectException;
+import com.sprinthub.repository.EmployeeRepository;
 import com.sprinthub.repository.ProjectRepository;
 import com.sprinthub.service.ProjectService;
 
@@ -18,6 +25,10 @@ public class ProjectService {
 
 	@Autowired
 	private ProjectRepository projectRepository;
+	
+	@Autowired
+    private EmployeeRepository employeeRepository;
+
 	
 	public void addProject(Project project) {
 		projectRepository.save(project);
@@ -63,7 +74,18 @@ public class ProjectService {
             throw new ProjectException("Project not found for id: " + id);
         }
     }
-
+    
+    
+    public List<Project> getProjectsByEmployeeId(int employeeId) {
+        Employee employee = employeeRepository.findByEmployeeId(employeeId);
+        if (employee != null) {
+            return new ArrayList<>(employee.getProjectEmployeeMappings()
+                .stream()
+                .map(AssignmentMapping::getProject)
+                .collect(Collectors.toSet()));
+        }
+        return Collections.emptyList();
+    }
 
 }
 
