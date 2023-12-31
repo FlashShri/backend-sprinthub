@@ -6,30 +6,31 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import com.sprinthub.entity.enums.DesignationTitle;
+
 @Entity
 @Table(name="designation")
 public class Designation {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int designationId;
-	
-	private String title;
 
-	public int getDesignationId() {
-		return designationId;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int designationId;
 
-	public void setDesignationId(int designationId) {
-		this.designationId = designationId;
-	}
+    private DesignationTitle title;
 
-	public String getTitle() {
-		return title;
-	}
+    public int getDesignationId() {
+        return designationId;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
+    public void setDesignationId(int designationId) {
+        this.designationId = designationId;
+    }
+
+    public DesignationTitle getTitle() {
+        return title;
+    }
+
+    public void setTitle(DesignationTitle title) {
+        this.title = title;
+    }
 }
