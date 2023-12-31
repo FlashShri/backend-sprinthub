@@ -2,6 +2,11 @@ package com.sprinthub.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,6 +24,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="task")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "taskId")
 public class Task {
 	
 	  	@Id
@@ -45,10 +51,12 @@ public class Task {
 
 	    @ManyToOne(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "project_id")
+	    @JsonIdentityReference(alwaysAsId = true)
 	    private Project project;
 
 	    @ManyToOne(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "employeeId")
+	    @JsonIdentityReference(alwaysAsId = true)
 	    private Employee employee;
 
 		public String getDomain() {

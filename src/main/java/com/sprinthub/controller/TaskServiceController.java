@@ -1,5 +1,88 @@
 package com.sprinthub.controller;
 
+import com.sprinthub.dto.TaskDTO;
+import com.sprinthub.dto.TaskDeleteStatus;
+import com.sprinthub.entity.Task;
+import com.sprinthub.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping("/api/tasks")
+public class TaskServiceController {
+
+    private final TaskService taskService;
+
+    @Autowired
+    public TaskServiceController(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
+    /*    @GetMapping
+    public ResponseEntity<List<Task>> getAllTasks() {
+        List<Task> tasks = taskService.getAllTasks();
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
+
+    @GetMapping("/{taskId}")
+    public ResponseEntity<Task> getTaskById(@PathVariable int taskId) {
+        Optional<Task> task = taskService.getTaskById(taskId);
+        return task.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+*/
+    
+    @GetMapping("/{taskId}")
+    public ResponseEntity<TaskDTO> getTaskDTOById(@PathVariable int taskId) {
+        // Call a method in your service to retrieve a single TaskDTO by ID
+        Optional<TaskDTO> taskDTO = taskService.getTaskDTOById(taskId);
+
+        return taskDTO.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+    
+    
+    @PostMapping
+    public ResponseEntity<Task> saveTask(@RequestBody Task task) {
+        Task savedTask = taskService.saveTask(task);
+        return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<TaskDeleteStatus> deleteTask(@PathVariable int taskId) {
+        try {
+        	taskService.deleteTask(taskId);
+            TaskDeleteStatus deleteStatus = new TaskDeleteStatus();
+            deleteStatus.setStatus("Task with ID " + taskId + " successfully deleted.");
+            return ResponseEntity.status(HttpStatus.OK).body(deleteStatus);
+        } catch (Exception e) {
+            // Log the exception or handle it as needed
+            e.printStackTrace();
+            throw new RuntimeException("Error deleting task with ID: " + taskId, e);
+        }
+    }
+
+    
+    @PostMapping("/{taskId}/assign/{employeeId}")
+    public ResponseEntity<?> assignTaskToEmployee(
+            @PathVariable int taskId,
+            @PathVariable int employeeId) {
+        return taskService.assignTaskToEmployee(taskId, employeeId);
+    }
+}
+
+
+
+
+
+/*package com.sprinthub.controller;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,8 +150,9 @@ public class TaskServiceController {
             @PathVariable int employeeId) {
         return taskService.assignTaskToEmployee(taskId, employeeId);
     }
-    
+    }
+    */
     
     
 	
-}
+
