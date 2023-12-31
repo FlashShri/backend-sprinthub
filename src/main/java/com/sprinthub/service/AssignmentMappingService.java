@@ -1,5 +1,34 @@
-// AssignmentMappingService.java
+package com.sprinthub.service;
 
+import com.sprinthub.entity.AssignmentMapping;
+import com.sprinthub.repository.AssignmentMappingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AssignmentMappingService {
+
+    private final AssignmentMappingRepository assignmentMappingRepository;
+
+    @Autowired
+    public AssignmentMappingService(AssignmentMappingRepository assignmentMappingRepository) {
+        this.assignmentMappingRepository = assignmentMappingRepository;
+    }
+
+    public AssignmentMapping saveAssignmentMapping(AssignmentMapping assignmentMapping) {
+        // You can add business logic/validation if needed
+        return assignmentMappingRepository.save(assignmentMapping);
+    }
+
+    // You can add more service methods as needed
+}
+
+
+
+
+
+// AssignmentMappingService.java
+/*
 package com.sprinthub.service;
 
 import com.sprinthub.entity.AssignmentMapping;
@@ -13,15 +42,20 @@ import com.sprinthub.repository.ProjectRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class AssignmentMappingService {
 
-    @Autowired
+ @Autowired
     private AssignmentMappingRepository assignmentMappingRepository;
 
     @Autowired
@@ -47,5 +81,12 @@ public class AssignmentMappingService {
             throw new AssignmentMappingServiceException("Employee or Project not found");
         }
     }
-}
+	
+
+}*/
+
+
+
+
+
 

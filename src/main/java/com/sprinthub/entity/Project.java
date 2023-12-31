@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,6 +38,7 @@ public class Project {
 	private Manager manager;
 	
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+	  @JsonBackReference
 	 private Set<Task> tasks;
 	
 
