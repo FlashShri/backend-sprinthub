@@ -16,6 +16,15 @@ public class Feedback {
 	
 	private String name;
 	private String email;
+	private String description;
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 	public int getFeedbackId() {
 		return feedbackId;
