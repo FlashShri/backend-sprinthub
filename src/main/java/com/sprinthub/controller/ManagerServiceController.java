@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/managers")
+@RequestMapping("/managers")
 public class ManagerServiceController {
 
 	@Autowired
@@ -19,13 +19,14 @@ public class ManagerServiceController {
         return managerService.register(manager);
     }
 
-    @GetMapping("/{id}")
+ 
+   	@GetMapping("/manager/{id}")
     public ResponseEntity<?> getManagerById(@PathVariable int id) {
         return managerService.getManagerById(id);
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<?> getManagerByEmail(@RequestParam String email) {
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getManagerByEmail(@PathVariable String email) {
         return managerService.getManagerByEmail(email);
     }
 

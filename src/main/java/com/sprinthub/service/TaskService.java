@@ -120,7 +120,7 @@ public class TaskService {
         Optional<Project> project = projectRepository.findById(projectId);
 
         if (project.isPresent()) {
-            List<Task> tasks = taskRepository.findByProjectId(projectId);
+            List<Task> tasks = taskRepository.findByProject_ProjectId(projectId);
             return ResponseEntity.ok().body(tasks);
         } else {
         	return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -134,9 +134,8 @@ public class TaskService {
     public ResponseEntity<?> getTasksByEmployeeId(int employeeId) {
     	
         Optional<Employee> employee = employeeRepository.findById(employeeId);
-
         if (employee.isPresent()) {
-            List<Task> tasks = taskRepository.findByEmployeeId(employeeId);
+            List<Task> tasks = taskRepository.findByEmployee_EmployeeId(employeeId);
             return ResponseEntity.ok().body(tasks);
         } else {
             
