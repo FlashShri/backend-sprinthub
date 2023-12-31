@@ -8,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-import com.sprinthub.entity.enums.DesignationTitle;
+
 
 @Entity
 @Table(name="designation")
@@ -23,8 +23,11 @@ public class Designation {
 	@OneToOne(mappedBy = "designation" , cascade = CascadeType.ALL)
 	private Employee employee;
 
+	private String title;
 
-    private DesignationTitle title;
+	
+
+   // private DesignationTitle title;
     
 	public Employee getEmployee() {
 		return employee;
@@ -42,11 +45,13 @@ public class Designation {
         this.designationId = designationId;
     }
 
-    public DesignationTitle getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(DesignationTitle title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+ 
 }

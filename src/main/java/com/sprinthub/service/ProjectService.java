@@ -87,5 +87,9 @@ public class ProjectService {
         return Collections.emptyList();
     }
 
+	public List<Project> getAllProjects() {
+		return projectRepository.findAll();
+	}
+
 }
 

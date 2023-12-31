@@ -9,11 +9,11 @@ import com.sprinthub.entity.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Integer>{
 
-	public Optional<Task> findByTaskId(int TaskId);
 
-	public List<Task> findByProjectId(int projectId);
+
+	public List<Task> findByProject_ProjectId(int projectId);
 	
-	public List<Task> findByEmployeeId(int employeeId);
+	public List<Task> findByEmployee_EmployeeId(int employeeId);
 
 	public List<Task> findByDomain(String domain);
 	
