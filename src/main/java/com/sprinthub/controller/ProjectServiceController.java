@@ -54,7 +54,24 @@ public class ProjectServiceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
         }
     }
-		
+	
+    @GetMapping("/projects")
+    public ResponseEntity<Object> getAllProjects() {
+        try {
+            List<Project> projects = projectService.getAllProjects();
+
+            if (!projects.isEmpty()) {
+                return ResponseEntity.ok(projects);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No projects found");
+            }
+        } catch (ProjectException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+        }
+    }
+    
 	 @DeleteMapping("/project/{id}")
 	    public ResponseEntity<String> deleteProject(@PathVariable int id) {
 	        try {

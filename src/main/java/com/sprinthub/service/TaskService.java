@@ -85,17 +85,20 @@ public class TaskService {
     private EmployeeRepository employeeRepository;  // Assuming you have an EmployeeRepository
 
     public ResponseEntity<?> create(Task task) {
-        Optional<Task> existingTask = taskRepository.findById(task.getTaskId());
-
-        if (existingTask.isPresent()) {
+       Optional<Task> existingTask = taskRepository.findById(task.getTaskId());
+        Task savedTask = taskRepository.save(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
+      /* if (existingTask.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new TaskServiceException("Task already exists!"));
         } else {
             Task savedTask = taskRepository.save(task);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedTask);
         }
+       */ 
     }
 
+    
     
     public ResponseEntity<Task> getTaskById(int id) {
         Optional<Task> task = taskRepository.findById(id);

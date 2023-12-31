@@ -19,7 +19,7 @@ import com.sprinthub.service.TaskService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api/task")
+@RequestMapping("/task")
 public class TaskServiceController {
 	
 	
