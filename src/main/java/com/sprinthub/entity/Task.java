@@ -47,7 +47,7 @@ public class Task {
 	    private Project project;
 
 	    
-	    @OneToOne
+	    @ManyToOne
 	    @JoinColumn(name = "employeeId")
 	    private Employee employee;
 	    

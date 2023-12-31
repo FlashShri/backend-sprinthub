@@ -1,9 +1,13 @@
 package com.sprinthub.entity;
 
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -21,9 +25,18 @@ public class Manager {
 	private long phoneNumber;
 	private String city;
 
-	 @OneToOne(mappedBy = "manager")
-	 private Project project;
+	 @OneToMany(mappedBy = "manager",cascade = CascadeType.ALL)
+	 private Set<Project> projects;
 	
+	 
+	public Set<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(Set<Project> projects) {
+		this.projects = projects;
+	}
+
 	public int getManagerId() {
 		return managerId;
 	}

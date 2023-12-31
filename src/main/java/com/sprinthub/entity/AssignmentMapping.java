@@ -23,7 +23,8 @@ public class AssignmentMapping {
     @ManyToOne
     @JoinColumn(name = "employeeId")
     private Employee employee;
-
+    
+    
 	public int getMappingId() {
 		return mappingId;
 	}
