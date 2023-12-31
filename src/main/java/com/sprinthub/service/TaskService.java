@@ -58,6 +58,28 @@ public class TaskService {
     }
 
     
+    public List<TaskDTO> getAllTasks() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private TaskDTO convertAllTaskToDTO(Task task) {
+        TaskDTO dto = new TaskDTO();
+        dto.setTaskId(task.getTaskId());
+        dto.setTitle(task.getTitle());
+        dto.setDescription(task.getDescription());
+        dto.setDomain(task.getDomain());
+        dto.setStatus(task.getStatus());
+        dto.setStartTaskDate(task.getStartTaskDate());
+        dto.setDeadlineTaskDate(task.getDeadlineTaskDate());
+        dto.setProjectId(task.getProject() != null ? task.getProject().getProjectId() : 0);
+        dto.setEmployeeId(task.getEmployee() != null ? task.getEmployee().getEmployeeId() : 0);
+        return dto;
+    }
+
+    
 /*
     public Optional<Task> getTaskById(int taskId) {
         return taskRepository.findById(taskId);
