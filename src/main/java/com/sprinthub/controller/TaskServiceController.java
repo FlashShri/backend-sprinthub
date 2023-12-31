@@ -37,6 +37,11 @@ public class TaskServiceController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 */
+    @GetMapping
+    public ResponseEntity<List<TaskDTO>> getAllTasks() {
+        List<TaskDTO> taskDTOs = taskService.getAllTasks();
+        return new ResponseEntity<>(taskDTOs, HttpStatus.OK);
+    }
     
     @GetMapping("/{taskId}")
     public ResponseEntity<TaskDTO> getTaskDTOById(@PathVariable int taskId) {
