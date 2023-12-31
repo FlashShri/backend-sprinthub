@@ -1,0 +1,20 @@
+package com.sprinthub.repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.sprinthub.entity.Task;
+
+public interface TaskRepository extends JpaRepository<Task, Integer>{
+
+	public Optional<Task> findByTaskId(int TaskId);
+
+	public List<Task> findByProjectId(int projectId);
+	
+	public List<Task> findByEmployeeId(int employeeId);
+
+	public List<Task> findByDomain(String domain);
+	
+}
