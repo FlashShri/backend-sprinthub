@@ -2,6 +2,7 @@ package com.sprinthub.entity;
 
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,9 +31,21 @@ public class Employee {
 	@JoinColumn(name = "designationId")
 	private Designation designation;
 
-
-	@OneToMany(mappedBy = "employee")
+	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+	private Set<Task> tasks;
+	
+	@OneToMany(mappedBy = "employee", cascade =  CascadeType.ALL)
     private Set<AssignmentMapping> projectEmployeeMappings;
+
+	
+	
+	public Set<Task> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(Set<Task> tasks) {
+		this.tasks = tasks;
+	}
 
 	public int getEmployeeId() {
 		return employeeId;
