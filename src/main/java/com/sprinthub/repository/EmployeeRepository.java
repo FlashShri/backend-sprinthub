@@ -8,6 +8,7 @@ import com.sprinthub.entity.Employee;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 	 
 	public Optional<Employee> findByEmail(String Email);
+	public Employee findByEmployeeId(int employeeId);
 	
 }
 
