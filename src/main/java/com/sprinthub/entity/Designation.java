@@ -8,23 +8,24 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
+import com.sprinthub.entity.enums.DesignationTitle;
+
 @Entity
 @Table(name="designation")
 public class Designation {
+
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int designationId;
 	
-	private String title;
 	
 	@OneToOne(mappedBy = "designation" , cascade = CascadeType.ALL)
 	private Employee employee;
 
-	public int getDesignationId() {
-		return designationId;
-	}
 
+    private DesignationTitle title;
+    
 	public Employee getEmployee() {
 		return employee;
 	}
@@ -33,16 +34,19 @@ public class Designation {
 		this.employee = employee;
 	}
 
-	public void setDesignationId(int designationId) {
-		this.designationId = designationId;
-	}
+    public int getDesignationId() {
+        return designationId;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void setDesignationId(int designationId) {
+        this.designationId = designationId;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
+    public DesignationTitle getTitle() {
+        return title;
+    }
+
+    public void setTitle(DesignationTitle title) {
+        this.title = title;
+    }
 }
