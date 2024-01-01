@@ -27,7 +27,7 @@ public class Project {
 	private int projectId;
 	
 	private String projectTitle;
-	private String projectDiscription;
+	private String projectDescription;
 	private LocalDate createDate;
 
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
@@ -92,13 +92,15 @@ public class Project {
 	}
 
 
-	public String getProjectDiscription() {
-		return projectDiscription;
+
+
+	public String getProjectDescription() {
+		return projectDescription;
 	}
 
 
-	public void setProjectDiscription(String projectDiscription) {
-		this.projectDiscription = projectDiscription;
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
 	}
 
 
