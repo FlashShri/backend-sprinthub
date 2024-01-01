@@ -1,5 +1,7 @@
 package com.sprinthub.entity;
 
+import com.sprinthub.entity.enums.DesignationTitle;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,11 +25,11 @@ public class Designation {
 	@OneToOne(mappedBy = "designation" , cascade = CascadeType.ALL)
 	private Employee employee;
 
-	private String title;
+//	private String title;
 
 	
 
-   // private DesignationTitle title;
+    private DesignationTitle title;
     
 	public Employee getEmployee() {
 		return employee;
@@ -45,13 +47,12 @@ public class Designation {
         this.designationId = designationId;
     }
 
-	public String getTitle() {
+	public DesignationTitle getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(DesignationTitle title) {
 		this.title = title;
 	}
 
- 
 }
