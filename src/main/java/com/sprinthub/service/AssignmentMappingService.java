@@ -1,7 +1,15 @@
 package com.sprinthub.service;
 
 import com.sprinthub.entity.AssignmentMapping;
+import com.sprinthub.entity.Employee;
+import com.sprinthub.entity.Project;
+import com.sprinthub.exception.AssignmentMappingServiceException;
 import com.sprinthub.repository.AssignmentMappingRepository;
+import com.sprinthub.repository.EmployeeRepository;
+import com.sprinthub.repository.ProjectRepository;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +22,37 @@ public class AssignmentMappingService {
     public AssignmentMappingService(AssignmentMappingRepository assignmentMappingRepository) {
         this.assignmentMappingRepository = assignmentMappingRepository;
     }
+    
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+	
 
     public AssignmentMapping saveAssignmentMapping(AssignmentMapping assignmentMapping) {
         // You can add business logic/validation if needed
         return assignmentMappingRepository.save(assignmentMapping);
     }
 
-    // You can add more service methods as needed
+    public AssignmentMapping mapEmployeeToProject(int employeeId, int projectId) {
+        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
+        Optional<Project> projectOptional = projectRepository.findById(projectId);
+
+        if (employeeOptional.isPresent() && projectOptional.isPresent()) {
+            Employee employee = employeeOptional.get();
+            Project project = projectOptional.get();
+
+            AssignmentMapping assignmentMapping = new AssignmentMapping();
+            assignmentMapping.setEmployee(employee);
+            assignmentMapping.setProject(project);
+
+            return assignmentMappingRepository.save(assignmentMapping);
+        } else {
+            throw new AssignmentMappingServiceException("Employee or Project not found");
+        }
+    }
+
 }
 
 
@@ -63,24 +95,6 @@ public class AssignmentMappingService {
 
     @Autowired
     private ProjectRepository projectRepository;
-
-    public AssignmentMapping mapEmployeeToProject(int employeeId, int projectId) {
-        Optional<Employee> employeeOptional = employeeRepository.findById(employeeId);
-        Optional<Project> projectOptional = projectRepository.findById(projectId);
-
-        if (employeeOptional.isPresent() && projectOptional.isPresent()) {
-            Employee employee = employeeOptional.get();
-            Project project = projectOptional.get();
-
-            AssignmentMapping assignmentMapping = new AssignmentMapping();
-            assignmentMapping.setEmployee(employee);
-            assignmentMapping.setProject(project);
-
-            return assignmentMappingRepository.save(assignmentMapping);
-        } else {
-            throw new AssignmentMappingServiceException("Employee or Project not found");
-        }
-    }
 	
 
 }*/
