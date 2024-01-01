@@ -1,5 +1,7 @@
 package com.sprinthub.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,6 +35,7 @@ public class AssignmentMapping {
 		this.mappingId = mappingId;
 	}
 
+	@JsonBackReference
 	public Project getProject() {
 		return project;
 	}
@@ -41,6 +44,7 @@ public class AssignmentMapping {
 		this.project = project;
 	}
 
+	@JsonBackReference
 	public Employee getEmployee() {
 		return employee;
 	}

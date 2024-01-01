@@ -5,9 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,23 +32,33 @@ public class Project {
 	private String projectDescription;
 	private LocalDate createDate;
 
-	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<AssignmentMapping> projectEmployeeMappings;
 	
 	@ManyToOne
 	 @JoinColumn(name = "manager_id")
 	private Manager manager;
 	
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+
+
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+
+
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-	  @JsonBackReference
 	 private Set<Task> tasks;
 	
 
+	@JsonBackReference
 	public Set<Task> getTasks() {
 		return tasks;
 	}
 
-
+	
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
@@ -67,6 +79,7 @@ public class Project {
 	}
 
 
+	@JsonManagedReference
 	public Set<AssignmentMapping> getProjectEmployeeMappings() {
 		return projectEmployeeMappings;
 	}
@@ -94,6 +107,7 @@ public class Project {
 
 
 
+
 	public String getProjectDescription() {
 		return projectDescription;
 	}
@@ -102,6 +116,7 @@ public class Project {
 	public void setProjectDescription(String projectDescription) {
 		this.projectDescription = projectDescription;
 	}
+
 
 
 	public LocalDate getCreateDate() {

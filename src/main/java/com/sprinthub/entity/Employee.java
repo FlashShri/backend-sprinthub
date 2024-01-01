@@ -3,6 +3,7 @@ package com.sprinthub.entity;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -34,14 +35,13 @@ public class Employee {
 	private Designation designation;
 
 	@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
-	  @JsonBackReference
 	private Set<Task> tasks;
 	
 	@OneToMany(mappedBy = "employee", cascade =  CascadeType.ALL)
     private Set<AssignmentMapping> projectEmployeeMappings;
 
 	
-	
+	@JsonBackReference
 	public Set<Task> getTasks() {
 		return tasks;
 	}
@@ -98,6 +98,7 @@ public class Employee {
 		this.city = city;
 	}
 
+	@JsonManagedReference
 	public Set<AssignmentMapping> getProjectEmployeeMappings() {
 		return projectEmployeeMappings;
 	}

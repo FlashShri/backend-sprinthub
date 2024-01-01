@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/admins")
 public class AdminController {
 
@@ -34,13 +35,30 @@ public class AdminController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/{email}")
-    public ResponseEntity<Admin> getAdminByEmail(@PathVariable String email) {
-        Optional<Admin> admin = adminService.getAdminByEmail(email);
-        return admin.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    @GetMapping("/{email}/{password}")
+//    public ResponseEntity<Admin> getAdminByEmail(@PathVariable String email, @PathVariable String password ) {
+//        Optional<Admin> admin = adminService.getAdminByEmail(email);
+//        password = admin.getPassword();
+//        return admin.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+//                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+//    }
+    
+    @GetMapping("/admin")
+    public ResponseEntity<Admin> getAdminByEmailAndPassword(
+        @RequestParam String email,
+        @RequestParam String password
+    ) {
+        Admin admin = adminService.getAdminByEmailAndPassword(email, password);
+        
+        if (admin != null) {
+            return new ResponseEntity<>(admin, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Admin not found or invalid credentials
+        }
     }
 
+    
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/{adminId}")
     public ResponseEntity<Object> updateAdmin(@PathVariable int adminId, @RequestBody Admin updatedAdmin) {
         Admin admin = adminService.updateAdmin(adminId, updatedAdmin);
