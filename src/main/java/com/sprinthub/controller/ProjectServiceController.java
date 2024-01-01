@@ -109,7 +109,7 @@ public class ProjectServiceController {
 	     }
 	 }
 	 
-	 @GetMapping("/employee/{employeeId}")
+	 @GetMapping("/employees/{employeeId}")
 	 public ResponseEntity<List<Project>> getProjectsByEmployeeId(@PathVariable int employeeId) {
 	        List<Project> projects = projectService.getProjectsByEmployeeId(employeeId);
 	        
