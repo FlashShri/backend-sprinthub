@@ -2,6 +2,7 @@ package com.sprinthub.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -83,6 +84,7 @@ public class Task {
 			this.deadlineTaskDate = deadlineTaskDate;
 		}
 
+		@JsonManagedReference
 		public int getTaskId() {
 			return taskId;
 		}
@@ -115,6 +117,7 @@ public class Task {
 			this.description = description;
 		}
 
+		
 		public TaskStatus getStatus() {
 			return status;
 		}
@@ -123,6 +126,7 @@ public class Task {
 			this.status = status;
 		}
 
+		@JsonManagedReference
 		public Employee getEmployee() {
 			return employee;
 		}

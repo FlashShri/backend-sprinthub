@@ -1,6 +1,7 @@
 package com.sprinthub.controller;
 
 import com.sprinthub.dto.ManagerDTO;
+import com.sprinthub.entity.Admin;
 import com.sprinthub.entity.Manager;
 import com.sprinthub.service.ManagerService;
 
@@ -23,6 +24,21 @@ public class ManagerServiceController {
     @PostMapping("/register")
     public ResponseEntity<?> registerManager(@RequestBody Manager manager) {
         return managerService.register(manager);
+    }
+    
+    
+    @GetMapping("/manager")
+    public ResponseEntity<Manager> getAdminByEmailAndPassword(
+        @RequestParam String email,
+        @RequestParam String password
+    ) {
+        Manager manager = managerService.getManagerByEmailAndPassword(email, password);
+        
+        if (manager != null) {
+            return new ResponseEntity<>(manager, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Manager not found or invalid credentials
+        }
     }
 
  

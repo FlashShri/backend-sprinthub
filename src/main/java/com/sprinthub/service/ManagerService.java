@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.sprinthub.dto.ManagerDTO;
+import com.sprinthub.entity.Admin;
 import com.sprinthub.entity.Manager;
 import com.sprinthub.exception.ManagerServiceException;
 import com.sprinthub.repository.ManagerRepository;
@@ -29,6 +30,10 @@ public class ManagerService {
             Manager savedManager = managerRepository.save(manager);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedManager);
         }
+    }
+    
+    public Manager getManagerByEmailAndPassword(String email, String password) {
+        return managerRepository.findByEmailAndPassword(email, password);
     }
 
     public ResponseEntity<?> getManagerById(int id) {

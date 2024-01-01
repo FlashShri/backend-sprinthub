@@ -67,7 +67,7 @@ public class EmployeeServiceController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{employeeId}/designation")
+    @PutMapping("/designation/{employeeId}")
     public ResponseEntity<Employee> updateEmployeeDesignation(@PathVariable Integer employeeId, @RequestBody Designation newDesignation) {
         Employee updatedEmployee = employeeService.updateEmployeeDesignation(employeeId, newDesignation);
         return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
