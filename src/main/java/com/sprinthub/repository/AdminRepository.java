@@ -12,4 +12,6 @@ import com.sprinthub.entity.Admin;
 public interface AdminRepository extends JpaRepository<Admin, Integer> {
  // Add custom query methods if needed
 	public Optional<Admin> findByEmail(String Email);
+	
+	Admin findByEmailAndPassword(String email, String password);
 }

@@ -64,7 +64,7 @@ public class ProjectService {
 
             // Update title field of existingDesignation with data from updatedDesignation
         	existingProject.setProjectTitle(updatedProject.getProjectTitle());
-        	existingProject.setProjectDiscription(updatedProject.getProjectDiscription());
+        	existingProject.setProjectDescription(updatedProject.getProjectDescription());
         	existingProject.setManager(updatedProject.getManager());
         	existingProject.setCreateDate(updatedProject.getCreateDate());
         	existingProject.setProjectEmployeeMappings(updatedProject.getProjectEmployeeMappings());
