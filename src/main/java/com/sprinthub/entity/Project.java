@@ -27,7 +27,7 @@ public class Project {
 	private int projectId;
 	
 	private String projectTitle;
-	private String projectDiscription;
+	private String projectDescription;
 	private LocalDate createDate;
 
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
@@ -37,6 +37,16 @@ public class Project {
 	 @JoinColumn(name = "manager_id")
 	private Manager manager;
 	
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+
+
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+
+
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
 	  @JsonBackReference
 	 private Set<Task> tasks;
@@ -92,14 +102,6 @@ public class Project {
 	}
 
 
-	public String getProjectDiscription() {
-		return projectDiscription;
-	}
-
-
-	public void setProjectDiscription(String projectDiscription) {
-		this.projectDiscription = projectDiscription;
-	}
 
 
 	public LocalDate getCreateDate() {
