@@ -107,6 +107,18 @@ public class Project {
 
 
 
+
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+
+
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+
+
+
 	public LocalDate getCreateDate() {
 		return createDate;
 	}
