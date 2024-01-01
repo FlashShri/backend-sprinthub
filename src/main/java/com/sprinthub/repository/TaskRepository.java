@@ -9,7 +9,7 @@ import com.sprinthub.entity.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Integer>{
 
-	
+	 List<Task> findByStatus(Task.TaskStatus status);
 	 
 
 

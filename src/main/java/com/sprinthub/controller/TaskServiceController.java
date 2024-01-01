@@ -3,6 +3,7 @@ package com.sprinthub.controller;
 import com.sprinthub.dto.TaskDTO;
 import com.sprinthub.dto.TaskDeleteStatus;
 import com.sprinthub.entity.Task;
+import com.sprinthub.entity.Task.TaskStatus;
 import com.sprinthub.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -80,84 +81,47 @@ public class TaskServiceController {
             @PathVariable int employeeId) {
         return taskService.assignTaskToEmployee(taskId, employeeId);
     }
+
+
+	//getting the tasks based on the status :
+		@GetMapping("/status/{status}")
+		public ResponseEntity<List<TaskDTO>> getTasksByStatus(@PathVariable Task.TaskStatus status) {
+		    List<Task> tasks = taskService.getTasksByStatus(status);
+		    List<TaskDTO> taskDTOs = tasks.stream()
+		            .map(this::convertToDTO)
+		            .collect(Collectors.toList());
+		
+		    return new ResponseEntity<>(taskDTOs, HttpStatus.OK);
+		}
+
+		private TaskDTO convertToDTO(Task task) {
+		    TaskDTO taskDTO = new TaskDTO();
+		    taskDTO.setTaskId(task.getTaskId());
+		    taskDTO.setTitle(task.getTitle());
+		    taskDTO.setDescription(task.getDescription());
+		    taskDTO.setDomain(task.getDomain());
+		    taskDTO.setStatus(task.getStatus());
+		    taskDTO.setStartTaskDate(task.getStartTaskDate());
+		    taskDTO.setDeadlineTaskDate(task.getDeadlineTaskDate());
+		    taskDTO.setProjectId(task.getProject().getProjectId());
+		    taskDTO.setEmployeeId(task.getEmployee().getEmployeeId());
+		
+		    return taskDTO;
+		}
+		
+		
+		@PutMapping("/{taskId}/{status}")
+	    public ResponseEntity<String> updateTaskStatus(
+	            @PathVariable int taskId,
+	            @PathVariable TaskStatus status
+	    ) {
+	        Task updatedTask = taskService.updateTaskStatus(taskId, status);
+	        return ResponseEntity.ok("Task status updated to: " + updatedTask.getStatus());
+	    }
+
 }
 
 
 
 
-
-/*package com.sprinthub.controller;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.sprinthub.entity.Task;
-import com.sprinthub.service.TaskService;
-
-@RestController
-@CrossOrigin
-@RequestMapping("/task")
-public class TaskServiceController {
-	
-	
-	@Autowired
-	private TaskService taskService;
-	
-	@PostMapping("/create")
-	public ResponseEntity<?>  createTask( @RequestBody Task task){
-		return taskService.create(task);
-	}
-	
-	@GetMapping("/{id}")
-	public ResponseEntity<?> getTaskById( @PathVariable int id) {
-		return  taskService.getTaskById(id);
-	}
-	
-	 @PutMapping("/{id}")
-	    public ResponseEntity<?> updateTask(@PathVariable Integer id, @RequestBody Task updatedTask) {
-	        return taskService.updateTask(id, updatedTask);
-	    }
-	 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteTask(@PathVariable Integer id) {
-        return taskService.deleteTask(id);
-    }
-	
-    
-    @GetMapping("/projects/{projectId}/tasks")
-    public ResponseEntity<?> getTasksByProjectId(@PathVariable int projectId) {
-        ResponseEntity<?> tasks = taskService.getTasksByProjectId(projectId);
-        return ResponseEntity.ok().body(tasks);
-        
-    }
-    
-    @GetMapping("/employees/{employeeId}/tasks")
-    public ResponseEntity<?> getTasksByEmployeeId(@PathVariable int employeeId) {
-        ResponseEntity<?> tasks = taskService.getTasksByEmployeeId(employeeId);
-        return ResponseEntity.ok().body(tasks);
-    }
-    
-    
-    @PostMapping("/{taskId}/assign/{employeeId}")
-    public ResponseEntity<?> assignTaskToEmployee(
-            @PathVariable int taskId,
-            @PathVariable int employeeId) {
-        return taskService.assignTaskToEmployee(taskId, employeeId);
-    }
-    }
-    */
-    
-    
-	
 
