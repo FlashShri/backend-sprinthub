@@ -10,12 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import com.sprinthub.dto.ProjectStatus;
 import com.sprinthub.entity.AssignmentMapping;
 import com.sprinthub.entity.Employee;
 import com.sprinthub.entity.Manager;
 import com.sprinthub.entity.Project;
 import com.sprinthub.exception.ProjectException;
 import com.sprinthub.repository.EmployeeRepository;
+
+import com.sprinthub.repository.ManagerRepository;
+
 import com.sprinthub.repository.ProjectRepository;
 import com.sprinthub.service.ProjectService;
 
@@ -28,6 +33,10 @@ public class ProjectService {
 	
 	@Autowired
     private EmployeeRepository employeeRepository;
+	
+	
+    @Autowired
+    private ManagerRepository managerRepository;
 
 	
 	public void addProject(Project project) {
@@ -64,7 +73,7 @@ public class ProjectService {
 
             // Update title field of existingDesignation with data from updatedDesignation
         	existingProject.setProjectTitle(updatedProject.getProjectTitle());
-        	existingProject.setProjectDiscription(updatedProject.getProjectDiscription());
+
         	existingProject.setManager(updatedProject.getManager());
         	existingProject.setCreateDate(updatedProject.getCreateDate());
         	existingProject.setProjectEmployeeMappings(updatedProject.getProjectEmployeeMappings());
@@ -91,5 +100,30 @@ public class ProjectService {
 		return projectRepository.findAll();
 	}
 
+
+
+
+
+
+    public ProjectStatus assignManagerToProject(int projectId, int managerId) {
+        Project project = projectRepository.findById(projectId).orElse(null);
+        Manager manager = managerRepository.findById(managerId).orElse(null);
+
+        ProjectStatus projectStatus = new ProjectStatus();
+        
+        if (project == null || manager == null) {
+            projectStatus.setStatus("Project or Manager not found");
+            return projectStatus;
+        }
+
+        project.setManager(manager);
+        projectRepository.save(project);
+        
+     
+        projectStatus.setStatus("Manager assigned successfully to the project.");
+        return projectStatus;
+       
+    }
 }
+	
 

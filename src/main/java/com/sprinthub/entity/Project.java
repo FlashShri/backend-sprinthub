@@ -6,8 +6,11 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,26 +30,29 @@ public class Project {
 	private int projectId;
 	
 	private String projectTitle;
-	private String projectDiscription;
+
+	private String projectDescription;
 	private LocalDate createDate;
 
-	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<AssignmentMapping> projectEmployeeMappings;
 	
 	@ManyToOne
 	 @JoinColumn(name = "manager_id")
 	private Manager manager;
-	
+
+
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-	  @JsonBackReference
 	 private Set<Task> tasks;
 	
 
+	@JsonBackReference
 	public Set<Task> getTasks() {
 		return tasks;
 	}
 
 
+	
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
@@ -65,6 +71,7 @@ public class Project {
 	public int getProjectId() {
 		return projectId;
 	}
+
 
 
 	public Set<AssignmentMapping> getProjectEmployeeMappings() {
@@ -92,14 +99,19 @@ public class Project {
 	}
 
 
-	public String getProjectDiscription() {
-		return projectDiscription;
+
+
+
+
+	public String getProjectDescription() {
+		return projectDescription;
 	}
 
 
-	public void setProjectDiscription(String projectDiscription) {
-		this.projectDiscription = projectDiscription;
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
 	}
+
 
 
 	public LocalDate getCreateDate() {

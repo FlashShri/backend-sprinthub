@@ -27,6 +27,11 @@ public class AdminService {
  }
 
 
+ 
+ public Admin getAdminByEmailAndPassword(String email, String password) {
+     return adminRepository.findByEmailAndPassword(email, password);
+ }
+ 
  public Optional<Admin> getAdminById(int adminId) {
      return adminRepository.findById(adminId);
  }
