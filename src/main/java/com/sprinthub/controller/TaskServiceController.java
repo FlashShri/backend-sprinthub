@@ -60,6 +60,7 @@ public class TaskServiceController {
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
 
+
     @DeleteMapping("/{taskId}")
     public ResponseEntity<TaskDeleteStatus> deleteTask(@PathVariable int taskId) {
         try {
@@ -73,6 +74,8 @@ public class TaskServiceController {
             throw new RuntimeException("Error deleting task with ID: " + taskId, e);
         }
     }
+   
+
 
     
     @PostMapping("/{taskId}/assign/{employeeId}")
@@ -118,7 +121,7 @@ public class TaskServiceController {
 	        Task updatedTask = taskService.updateTaskStatus(taskId, status);
 	        return ResponseEntity.ok("Task status updated to: " + updatedTask.getStatus());
 	    }
-
+		
 }
 
 

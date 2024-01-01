@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/assignment-mappings")
+@RequestMapping("/assignment-mappings")
 public class AssignmentMappingController {
 
     private final AssignmentMappingService assignmentMappingService;
@@ -24,7 +24,21 @@ public class AssignmentMappingController {
         return new ResponseEntity<>(savedMapping, HttpStatus.CREATED);
     }
 
-    // You can add more controller methods as needed
+
+    @PostMapping("/mapping/{employeeId}/to/{projectId}")
+    public ResponseEntity<AssignmentMapping> mapEmployeeToProject(
+            @PathVariable("employeeId") int employeeId,
+            @PathVariable("projectId") int projectId) {
+        try {
+            AssignmentMapping assignmentMapping = assignmentMappingService.mapEmployeeToProject(employeeId, projectId);
+            return new ResponseEntity<>(assignmentMapping, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Employee or Project not found
+        }
+    }
+	
+    
+    
 }
 
 
@@ -56,18 +70,7 @@ public class AssignmentMappingController {
   @Autowired
     private AssignmentMappingService assignmentMappingService;
 
-    @PostMapping("/mapping")
-    public ResponseEntity<AssignmentMapping> mapEmployeeToProject(
-            @PathVariable("employeeId") int employeeId,
-            @PathVariable("projectId") int projectId) {
-        try {
-            AssignmentMapping assignmentMapping = assignmentMappingService.mapEmployeeToProject(employeeId, projectId);
-            return new ResponseEntity<>(assignmentMapping, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Employee or Project not found
-        }
-    }
-	
+
 	
 
 
