@@ -1,5 +1,6 @@
 package com.sprinthub.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import com.sprinthub.entity.Project;
 import com.sprinthub.entity.Task;
 import com.sprinthub.entity.Task.TaskStatus;
 import com.sprinthub.exception.TaskServiceException;
+import com.sprinthub.repository.AssignmentMappingRepository;
 import com.sprinthub.repository.EmployeeRepository;
 import com.sprinthub.repository.ProjectRepository;
 import com.sprinthub.repository.TaskRepository;
@@ -38,6 +40,9 @@ public class TaskService {
     
     @Autowired
     private ProjectRepository projectRepository;
+    
+    @Autowired
+    private AssignmentMappingRepository assignmentMappingRepository ;
     
     @Autowired
     public TaskService(TaskRepository taskRepository) {
@@ -158,8 +163,6 @@ public class TaskService {
         return taskRepository.findByStatus(status);
     }
     
-    
-
 	 public Task updateTaskStatus(int taskId, TaskStatus newStatus) {
 	        Task task = taskRepository.findById(taskId)
 	                .orElseThrow(() -> new TaskServiceException("Task with ID " + taskId + " not found"));
@@ -167,6 +170,37 @@ public class TaskService {
 	        task.setStatus(newStatus);
 	        return taskRepository.save(task);
 	    }
+
+	public List<TaskDTO> getAllTasksByEmployee(int empId) {
+	
+		/*
+		 * Optional<Employee> employee = employeeRepository.findById(empId);
+		 * 
+		 * List<Project> projectList =
+		 * assignmentMappingRepository.findProjectsByEmployeeId(employee.get().
+		 * getEmployeeId());
+		 * 
+		 * 
+		 * List<Task> taskList = new ArrayList<>() ; for( Project p : projectList) {
+		 * 
+		 * Set<Task> taskSet = p.getTasks();
+		 * 
+		 * for( Task t : taskSet) { taskList.add(t); } }
+		 */
+		  
+		  
+		 // return  taskList.stream().map(task -> mapper.map(task, TaskDTO.class)).collect(Collectors.toList());
+		 Optional<Employee> employee = employeeRepository.findById(empId);
+	        if (employee.isPresent()) {
+	            return assignmentMappingRepository.findProjectsByEmployeeId(employee.get().getEmployeeId())
+	                    .stream()
+	                    .flatMap(project -> project.getTasks().stream())
+	                    .map(task -> mapper.map(task, TaskDTO.class))
+	                    .collect(Collectors.toList());
+	        } else {
+	            return Collections.emptyList(); // return an empty list if employee is not found
+	        } 
+	}
 	
     
   /*  public ResponseEntity<?> assignTaskToEmployee(int taskId, int employeeId) {

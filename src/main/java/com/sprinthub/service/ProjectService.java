@@ -160,7 +160,13 @@ public class ProjectService {
 		// TODO Auto-generated method stub
 		
 		 Optional<Manager> manager = managerRepository.findById(managerId);
-		return null;
+		 
+		 
+		 
+		   List<Project> projectList = projectRepository.findByManager(manager.get());
+		 
+		return projectList;
+		
 	}
 }
 	

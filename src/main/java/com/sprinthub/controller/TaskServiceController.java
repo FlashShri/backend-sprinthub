@@ -56,7 +56,17 @@ public class TaskServiceController {
         return new ResponseEntity<>(taskDTOs, HttpStatus.OK);
     }
     
-    @GetMapping("/{taskId}")
+
+@GetMapping("/employee")
+public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int empId) {
+			  List<TaskDTO> taskDTOs = taskService.getAllTasksByEmployee(empId); 
+			  return new 
+			  ResponseEntity<>(taskDTOs, HttpStatus.OK); 
+			  
+} 
+			 
+			     
+			     @GetMapping("/{taskId}")
     public ResponseEntity<TaskDTO> getTaskDTOById(@PathVariable int taskId) {
         // Call a method in your service to retrieve a single TaskDTO by ID
         Optional<TaskDTO> taskDTO = taskService.getTaskDTOById(taskId);

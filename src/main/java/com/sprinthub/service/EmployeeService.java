@@ -128,8 +128,8 @@ public class EmployeeService {
     }
 
 	public Employee getEmployeeByEmailAndPassword(String email, String password) {
-		Employee emp  = employeeRepository.findByEmailAndPassword(email , password);
-		return emp;
+		return employeeRepository.findByEmailAndPassword(email , password);
+		
 		
 	}
 }

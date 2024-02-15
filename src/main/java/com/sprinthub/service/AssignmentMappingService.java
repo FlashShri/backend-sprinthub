@@ -42,6 +42,8 @@ public class AssignmentMappingService {
         if (employeeOptional.isPresent() && projectOptional.isPresent()) {
             Employee employee = employeeOptional.get();
             Project project = projectOptional.get();
+            
+            
 
             AssignmentMapping assignmentMapping = new AssignmentMapping();
             assignmentMapping.setEmployee(employee);

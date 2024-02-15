@@ -129,7 +129,7 @@ public class ProjectServiceController {
 	        return new ResponseEntity<>(projects, HttpStatus.OK);
 	    }    
     
-	 @GetMapping("/employees/{managerId}")
+	 @GetMapping("/getproject/{managerId}")
 	 public ResponseEntity<List<Project>> getProjectsByManagerId(@PathVariable int managerId) {
 	        List<Project> projects = projectService.getProjectsByManagerId(managerId);
 	        
@@ -139,6 +139,7 @@ public class ProjectServiceController {
 	        
 	        return new ResponseEntity<>(projects, HttpStatus.OK);
 	    }  
+	 
 	 @PostMapping("/{projectId}/assign-manager/{managerId}")
 	    public ProjectStatus assignManagerToProject(
 	            @PathVariable int projectId,

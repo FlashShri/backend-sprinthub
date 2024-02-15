@@ -14,7 +14,9 @@ public class TaskDTO {
     private LocalDate deadlineTaskDate;
     private int projectId;  // assuming the ID is enough for project
     private int employeeId; // assuming the ID is enough for employee
-	public int getTaskId() {
+	
+    
+    public int getTaskId() {
 		return taskId;
 	}
 	public void setTaskId(int taskId) {
