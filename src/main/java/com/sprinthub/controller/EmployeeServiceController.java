@@ -6,8 +6,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.sprinthub.dto.EmployeeDTO;
+import com.sprinthub.dto.PostEmpDTO;
 import com.sprinthub.entity.Designation;
 import com.sprinthub.entity.Employee;
 import com.sprinthub.exception.customerServiceException;
@@ -15,14 +27,14 @@ import com.sprinthub.service.EmployeeService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/employee")
+@RequestMapping("/employees")
 public class EmployeeServiceController {
 
     @Autowired
     private EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<Employee> registerEmployee(@RequestBody Employee employee) {
+    public ResponseEntity<Employee> registerEmployee(@RequestBody PostEmpDTO employee) {
         try {
             Employee createdEmployee = employeeService.register(employee);
             return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
@@ -41,6 +53,21 @@ public class EmployeeServiceController {
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
     
+    @GetMapping("/employee")
+    public ResponseEntity<Employee> getEmployee(
+    		  @RequestParam String email,
+    	        @RequestParam String password
+    		) {
+   
+    	Employee emp =  employeeService.getEmployeeByEmailAndPassword( email , password);
+    	 if (emp != null) {
+             return new ResponseEntity<>(emp, HttpStatus.OK);
+         } else {
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND); // emp not found or invalid credentials
+         }
+    
+    }
+    
     @GetMapping("/{email}")
     public ResponseEntity<Employee> getEmployeeByEmail(@PathVariable String email) {
         Optional<Employee> employee = employeeService.getEmployeeByEmail(email);
@@ -49,17 +76,19 @@ public class EmployeeServiceController {
     }
 
     @GetMapping("/getBy/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer id) {
-        Optional<Employee> employee = employeeService.getEmployeeById(id);
-        return employee.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+    public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Integer id) {
+        EmployeeDTO employee = employeeService.getEmployeeById(id);
+        return new ResponseEntity<>(employee, HttpStatus.OK); }
     
-    @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Integer id, @RequestBody Employee employeeDetails) {
-        Employee updatedEmployee = employeeService.updateEmployeeById(id, employeeDetails);
+    
+    
+    
+    @PatchMapping("/{id}")
+    public ResponseEntity<EmployeeDTO> updateEmployee(@PathVariable Integer id, @RequestBody EmployeeDTO employeeDetails) {
+    	EmployeeDTO updatedEmployee = employeeService.updateEmployeeById(id, employeeDetails);
         return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
     }
+    
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable Integer id) {

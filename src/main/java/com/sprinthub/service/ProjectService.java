@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import com.sprinthub.dto.PostProjectDTO;
+import com.sprinthub.dto.ProjectDTO;
 import com.sprinthub.dto.ProjectStatus;
 import com.sprinthub.entity.AssignmentMapping;
 import com.sprinthub.entity.Employee;
@@ -18,11 +20,8 @@ import com.sprinthub.entity.Manager;
 import com.sprinthub.entity.Project;
 import com.sprinthub.exception.ProjectException;
 import com.sprinthub.repository.EmployeeRepository;
-
 import com.sprinthub.repository.ManagerRepository;
-
 import com.sprinthub.repository.ProjectRepository;
-import com.sprinthub.service.ProjectService;
 
 @Service
 @Transactional
@@ -37,11 +36,19 @@ public class ProjectService {
 	
     @Autowired
     private ManagerRepository managerRepository;
+    
+    @Autowired
+    private ModelMapper mapper;
 
 	
-	public void addProject(Project project) {
+	public void addProject(PostProjectDTO dto) {
+		
+		// map dto to project class
+		Project project= mapper.map(dto, Project.class);
+		
 		projectRepository.save(project);
 	}
+	
 	
 	public Optional<Project> getProjectById(int id) {
         Optional<Project> project = projectRepository.findById(id);
@@ -65,20 +72,29 @@ public class ProjectService {
     }
 	
     
-    public void updateProject(int id, Project updatedProject) throws ProjectException {
+    public void updateProject(int id, PostProjectDTO dto) throws ProjectException {
+    	
+    	
         Optional<Project> existingProjectOptional = projectRepository.findById(id);
 
         if (existingProjectOptional.isPresent()) {
         	Project existingProject = existingProjectOptional.get();
 
             // Update title field of existingDesignation with data from updatedDesignation
-        	existingProject.setProjectTitle(updatedProject.getProjectTitle());
-
-        	existingProject.setManager(updatedProject.getManager());
-        	existingProject.setCreateDate(updatedProject.getCreateDate());
-        	existingProject.setProjectEmployeeMappings(updatedProject.getProjectEmployeeMappings());
-
-            projectRepository.save(existingProject);
+        	// map dto to project class
+			Project updatedProject= mapper.map(dto, Project.class);
+        	
+			/*
+			 * existingProject.setProjectTitle(updatedProject.getProjectTitle());
+			 * 
+			 * existingProject.setManager(updatedProject.getManager());
+			 * existingProject.setCreateDate(updatedProject.getCreateDate());
+			 * existingProject.setProjectEmployeeMappings(updatedProject.
+			 * getProjectEmployeeMappings());
+			 */
+			updatedProject.setProjectId(id);
+			 
+            projectRepository.save(updatedProject);
         } else {
             throw new ProjectException("Project not found for id: " + id);
         }
@@ -96,8 +112,23 @@ public class ProjectService {
         return Collections.emptyList();
     }
 
-	public List<Project> getAllProjects() {
-		return projectRepository.findAll();
+	public List<ProjectDTO
+	> getAllProjects() {
+		
+		
+		  List<Project> proj  =projectRepository.findAll();
+		  for( Project p : proj) {
+			  System.out.println( p.getProjectId());
+		  }
+		List<ProjectDTO> pdtoList = new ArrayList<>();
+		
+		for( Project p : proj ) {
+			 ProjectDTO dto= mapper.map(p , ProjectDTO.class);
+			 
+			 dto.setId(p.getProjectId());
+			 pdtoList.add(dto);
+		}
+		return pdtoList;
 	}
 
 
@@ -119,11 +150,18 @@ public class ProjectService {
         project.setManager(manager);
         projectRepository.save(project);
         
-     
         projectStatus.setStatus("Manager assigned successfully to the project.");
         return projectStatus;
        
     }
+
+
+	public List<Project> getProjectsByManagerId(int managerId) {
+		// TODO Auto-generated method stub
+		
+		 Optional<Manager> manager = managerRepository.findById(managerId);
+		return null;
+	}
 }
 	
 

@@ -1,8 +1,14 @@
 package com.sprinthub.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sprinthub.dto.EmployeeDTO;
+import com.sprinthub.dto.PostEmpDTO;
 import com.sprinthub.entity.Designation;
 import com.sprinthub.entity.Employee;
 import com.sprinthub.exception.customerServiceException;
@@ -10,9 +16,6 @@ import com.sprinthub.repository.AssignmentMappingRepository;
 import com.sprinthub.repository.EmployeeRepository;
 
 import jakarta.transaction.Transactional;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,16 +26,23 @@ public class EmployeeService {
     
     @Autowired
     private AssignmentMappingRepository assignmentMappingRepository;
+    
+    @Autowired
+    private ModelMapper mapper;
 
     //1. Create Employee (Sign Up)
-    public Employee register(Employee employee) {
+    public Employee register(PostEmpDTO employee) {
+    	
+    	
         // Check if the employee with the given email already exists
         Optional<Employee> existingEmployee = employeeRepository.findByEmail(employee.getEmail());
         
         if (existingEmployee.isPresent()) {
         	throw new customerServiceException("Employee already exists!");
         } else {
-            return employeeRepository.save(employee);
+        	Employee emp =  mapper.map(employee, Employee.class);
+        	
+            return employeeRepository.save(emp);
         }
     }
     
@@ -47,8 +57,12 @@ public class EmployeeService {
     }
     
     //3. Get Employee by ID
-    public Optional<Employee> getEmployeeById(Integer id) {
-        return employeeRepository.findById(id);
+    public EmployeeDTO getEmployeeById(Integer id) {
+        
+    	 Optional<Employee> emp = employeeRepository.findById(id);
+    	 Employee emp1 = emp.get();
+    	 EmployeeDTO res = mapper.map(emp1, EmployeeDTO.class);
+    	return res ;
     }
 
     //4. Update Employee by Email
@@ -65,16 +79,24 @@ public class EmployeeService {
     }
     
     //4. Update employee by Id
-    public Employee updateEmployeeById(Integer id, Employee employeeDetails) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new customerServiceException("Employee not found with id: " + id));
+    public EmployeeDTO updateEmployeeById(Integer id, EmployeeDTO employeeDetails) {
+    	
+    	if( employeeRepository.existsById(id)) {
+    		Employee employee = employeeRepository.findById(id)
+                    .orElseThrow(() -> new customerServiceException("Employee not found with id: " + id));
+            employeeDetails.setEmployeeId(id);
+            
+          Employee emp =   mapper.map( employeeDetails , Employee.class);
+            emp.setPassword( employee.getPassword());
+             Employee empFinal= employeeRepository.save(emp);
+            
+              EmployeeDTO dto = mapper.map( empFinal , EmployeeDTO.class) ;
+    		return dto ;
+    	}
         
-        employee.setFullName(employeeDetails.getFullName());
-        employee.setEmail(employeeDetails.getEmail());
-        employee.setPhoneNumber(employeeDetails.getPhoneNumber());
-        employee.setCity(employeeDetails.getCity());
+
         
-        return employeeRepository.save(employee);
+        return null;
     }
 
     //5. Delete Employee
@@ -104,4 +126,10 @@ public class EmployeeService {
     public List<Employee> getEmployeesByProjectId(int projectId) {
         return assignmentMappingRepository.findEmployeesByProjectId(projectId);
     }
+
+	public Employee getEmployeeByEmailAndPassword(String email, String password) {
+		Employee emp  = employeeRepository.findByEmailAndPassword(email , password);
+		return emp;
+		
+	}
 }

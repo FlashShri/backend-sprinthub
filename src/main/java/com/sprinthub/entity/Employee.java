@@ -39,6 +39,8 @@ public class Employee {
 	
 	@OneToMany(mappedBy = "employee", cascade =  CascadeType.ALL)
     private Set<AssignmentMapping> projectEmployeeMappings;
+	
+	// private Set<> project ;
 
 	
 	@JsonBackReference

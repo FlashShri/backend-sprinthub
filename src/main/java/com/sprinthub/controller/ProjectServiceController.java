@@ -2,14 +2,21 @@ package com.sprinthub.controller;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-
+import com.sprinthub.dto.PostProjectDTO;
+import com.sprinthub.dto.ProjectDTO;
 import com.sprinthub.dto.ProjectStatus;
 import com.sprinthub.entity.Project;
 import com.sprinthub.exception.ProjectException;
@@ -24,9 +31,9 @@ public class ProjectServiceController {
 
    
     @PostMapping("/project")
-    public ResponseEntity<ProjectStatus> addDesignation(@RequestBody Project project) {
+    public ResponseEntity<ProjectStatus> addDesignation(@RequestBody PostProjectDTO dto) {
         try {
-            projectService.addProject(project);
+            projectService.addProject(dto);
 
             ProjectStatus status = new ProjectStatus();
             status.setStatus("Project added successfully");
@@ -55,10 +62,12 @@ public class ProjectServiceController {
         }
     }
 	
+    
+    
     @GetMapping("/projects")
     public ResponseEntity<Object> getAllProjects() {
         try {
-            List<Project> projects = projectService.getAllProjects();
+            List<ProjectDTO> projects = projectService.getAllProjects();
 
             if (!projects.isEmpty()) {
                 return ResponseEntity.ok(projects);
@@ -85,7 +94,7 @@ public class ProjectServiceController {
 	    }
 	 
 	 @PutMapping("/project/{id}")
-	 public ResponseEntity<ProjectStatus> updateProject(@PathVariable int id, @RequestBody Project updatedProject) {
+	 public ResponseEntity<ProjectStatus> updateProject(@PathVariable int id, @RequestBody PostProjectDTO updatedProject) {
 	     try {
 	         projectService.updateProject(id, updatedProject);
 
@@ -120,7 +129,16 @@ public class ProjectServiceController {
 	        return new ResponseEntity<>(projects, HttpStatus.OK);
 	    }    
     
-	 
+	 @GetMapping("/employees/{managerId}")
+	 public ResponseEntity<List<Project>> getProjectsByManagerId(@PathVariable int managerId) {
+	        List<Project> projects = projectService.getProjectsByManagerId(managerId);
+	        
+	        if (projects.isEmpty()) {
+	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	        }
+	        
+	        return new ResponseEntity<>(projects, HttpStatus.OK);
+	    }  
 	 @PostMapping("/{projectId}/assign-manager/{managerId}")
 	    public ProjectStatus assignManagerToProject(
 	            @PathVariable int projectId,

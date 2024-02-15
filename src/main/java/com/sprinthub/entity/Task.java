@@ -20,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 
 
@@ -47,6 +48,7 @@ public class Task {
 	        DONE
 	    }
 	    
+	    
 	    private LocalDate startTaskDate;
 	    private LocalDate deadlineTaskDate;
 
@@ -55,6 +57,7 @@ public class Task {
 	    @JsonIdentityReference(alwaysAsId = true)
 	    private Project project;
 
+	    
 	    @ManyToOne(fetch = FetchType.EAGER)
 	    @JoinColumn(name = "employeeId")
 	    @JsonIdentityReference(alwaysAsId = true)

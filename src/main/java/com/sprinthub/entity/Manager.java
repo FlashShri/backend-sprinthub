@@ -2,6 +2,8 @@ package com.sprinthub.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,10 +26,15 @@ public class Manager {
 	private String password;
 	private long phoneNumber;
 	private String city;
-
-	 @OneToMany(mappedBy = "manager",cascade = CascadeType.ALL)
-	 private Set<Project> projects;
 	
+	
+	
+	 @JsonBackReference
+	@OneToMany(mappedBy = "manager"/* , cascade = CascadeType.ALL*/)
+	private Set<Project> projects;
+	
+	 
+	 
 	 
 	public Set<Project> getProjects() {
 		return projects;

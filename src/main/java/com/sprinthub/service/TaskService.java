@@ -1,24 +1,28 @@
 package com.sprinthub.service;
 
-import com.sprinthub.dto.TaskAssignmentDTO;
-import com.sprinthub.dto.TaskDTO;
-import com.sprinthub.entity.Employee;
-import com.sprinthub.entity.Task;
-import com.sprinthub.entity.Task.TaskStatus;
-import com.sprinthub.exception.TaskServiceException;
-import com.sprinthub.repository.EmployeeRepository;
-import com.sprinthub.repository.TaskRepository;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import jakarta.transaction.Transactional;
-
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.sprinthub.dto.TaskAssignmentDTO;
+import com.sprinthub.dto.TaskCreateDTO;
+import com.sprinthub.dto.TaskDTO;
+import com.sprinthub.entity.Employee;
+import com.sprinthub.entity.Project;
+import com.sprinthub.entity.Task;
+import com.sprinthub.entity.Task.TaskStatus;
+import com.sprinthub.exception.TaskServiceException;
+import com.sprinthub.repository.EmployeeRepository;
+import com.sprinthub.repository.ProjectRepository;
+import com.sprinthub.repository.TaskRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
@@ -28,6 +32,12 @@ public class TaskService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+    
+    @Autowired
+    private ModelMapper mapper;
+    
+    @Autowired
+    private ProjectRepository projectRepository;
     
     @Autowired
     public TaskService(TaskRepository taskRepository) {
@@ -86,10 +96,20 @@ public class TaskService {
         return taskRepository.findById(taskId);
     }
 */
-    public Task saveTask(Task task) {
-        return taskRepository.save(task);
+    public TaskDTO saveTask(TaskCreateDTO taskdto , int project_id) {
+    	
+    	 Task task = mapper.map(taskdto , Task.class);
+    	 
+    	  Optional<Project> project = projectRepository.findById(project_id);
+    	  
+    	  task.setProject( project.get());
+    	 Task res = taskRepository.save(task);
+    	 
+    	
+        return  mapper.map(res, TaskDTO.class);
     }
 
+    
  
     public ResponseEntity<String> deleteTask(int taskId) {
         Optional<Task> taskOptional = taskRepository.findById(taskId);

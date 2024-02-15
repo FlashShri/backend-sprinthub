@@ -37,22 +37,21 @@ public class Project {
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<AssignmentMapping> projectEmployeeMappings;
 	
+	
+	
 	@ManyToOne
 	 @JoinColumn(name = "manager_id")
 	private Manager manager;
 
-
+	@JsonManagedReference
 	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
 	 private Set<Task> tasks;
 	
-
 	@JsonBackReference
 	public Set<Task> getTasks() {
 		return tasks;
 	}
 
-
-	
 	public void setTasks(Set<Task> tasks) {
 		this.tasks = tasks;
 	}
@@ -106,14 +105,9 @@ public class Project {
 	public String getProjectDescription() {
 		return projectDescription;
 	}
-
-
 	public void setProjectDescription(String projectDescription) {
 		this.projectDescription = projectDescription;
 	}
-
-
-
 	public LocalDate getCreateDate() {
 		return createDate;
 	}

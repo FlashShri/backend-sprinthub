@@ -1,5 +1,7 @@
 package com.sprinthub.dto;
 
+
+
 public class ManagerDTO {
 	private int managerId;
     private String fullName;
