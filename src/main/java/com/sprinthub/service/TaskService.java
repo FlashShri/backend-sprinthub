@@ -290,9 +290,31 @@ public class TaskService {
     		Optional<Project> project = projectRepository.findById(project_id);
     	
         List<Task> tasks = taskRepository.findByProject(project.get());
-        return tasks.stream()
-                .map(task -> mapper.map(task, TaskDTO.class))
-                .collect(Collectors.toList());
+        
+        String[] employeeName = new String[tasks.size()];
+        String[] projectName = new String[tasks.size()];
+        int i = 0;
+        for(Task t: tasks){
+        	if (t.getEmployee() != null) {
+                employeeName[i] = t.getEmployee().getFullName();
+            } else {
+                employeeName[i] = "null";
+            }
+            projectName[i] = t.getProject().getProjectTitle();
+            i++;
+        }
+        
+        List<TaskDTO> dtoList = tasks.stream()
+        .map(task ->
+        		mapper.map(task, TaskDTO.class))
+        .collect(Collectors.toList());
+        int j = 0;
+        for (TaskDTO td : dtoList) {
+        	td.setEmployeeName(employeeName[j]);
+        	td.setProjectName(projectName[j]);
+        }
+        
+        return dtoList;
     }
 	 
 }
