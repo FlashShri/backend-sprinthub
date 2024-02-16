@@ -280,6 +280,16 @@ public class TaskService {
 	        return Collections.emptyList(); // return an empty list if employee is not found
 	    }
 	}
+	
+    public List<TaskDTO> getTasksByProjectId(int project_id) {
+        // Implement the logic to fetch tasks based on project_id
+    		Optional<Project> project = projectRepository.findById(project_id);
+    	
+        List<Task> tasks = taskRepository.findByProject(project.get());
+        return tasks.stream()
+                .map(task -> mapper.map(task, TaskDTO.class))
+                .collect(Collectors.toList());
+    }
 	 
 }
 
