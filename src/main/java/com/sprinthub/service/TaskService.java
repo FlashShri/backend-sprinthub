@@ -3,6 +3,7 @@ package com.sprinthub.service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -105,6 +106,8 @@ public class TaskService {
     	
     	 Task task = mapper.map(taskdto , Task.class);
     	 
+    	 task.setStatus(Task.TaskStatus.BACKLOG);
+    	 
     	  Optional<Project> project = projectRepository.findById(project_id);
     	  
     	  task.setProject( project.get());
@@ -159,18 +162,41 @@ public class TaskService {
     }
     
     
-    public List<Task> getTasksByStatus(Task.TaskStatus status) {
+    public List<Task> getTasksByStatus(Task.TaskStatus status){
         return taskRepository.findByStatus(status);
     }
     
-	 public Task updateTaskStatus(int taskId, TaskStatus newStatus) {
-	        Task task = taskRepository.findById(taskId)
-	                .orElseThrow(() -> new TaskServiceException("Task with ID " + taskId + " not found"));
-
-	        task.setStatus(newStatus);
-	        return taskRepository.save(task);
-	    }
-
+	/*
+	 * public Task updateTaskStatus(int taskId, TaskStatus newStatus) { Task task =
+	 * taskRepository.findById(taskId) .orElseThrow(() -> new
+	 * TaskServiceException("Task with ID " + taskId + " not found"));
+	 * 
+	 * task.setStatus(newStatus); return taskRepository.save(task); }
+	 */
+    public boolean updateTaskStatus(int taskId, TaskStatus status, int employeeId) {
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        if (optionalTask.isPresent()) {
+            Task task = optionalTask.get();
+            
+            
+			/*
+			 * // Check if the task belongs to the specified employee if
+			 * (task.getEmployee().getEmployeeId() == employeeId) { task.setStatus(status);
+			 * taskRepository.save(task); return true; } else { // Task does not belong to
+			 * the specified employee return false; }
+			 */
+            
+            task.setStatus(status);
+            taskRepository.save(task);
+            
+            return true;
+            
+        } else {
+            // Task not found
+            return false;
+        }
+    }
+    
 	public List<TaskDTO> getAllTasksByEmployee(int empId) {
 	
 		/*
@@ -192,11 +218,19 @@ public class TaskService {
 		 // return  taskList.stream().map(task -> mapper.map(task, TaskDTO.class)).collect(Collectors.toList());
 		 Optional<Employee> employee = employeeRepository.findById(empId);
 	        if (employee.isPresent()) {
-	            return assignmentMappingRepository.findProjectsByEmployeeId(employee.get().getEmployeeId())
+	        	List<TaskDTO> tasklist =  assignmentMappingRepository.findProjectsByEmployeeId(employee.get().getEmployeeId())
 	                    .stream()
 	                    .flatMap(project -> project.getTasks().stream())
-	                    .map(task -> mapper.map(task, TaskDTO.class))
+	                    .map(task -> {
+	                        TaskDTO taskDTO = mapper.map(task, TaskDTO.class);
+	                        taskDTO.setProjectId(task.getProject().getProjectId());
+	                        taskDTO.setEmployeeId(empId);
+	                        return taskDTO;
+	                    }
+                        )
 	                    .collect(Collectors.toList());
+	        	
+	        	return tasklist;
 	        } else {
 	            return Collections.emptyList(); // return an empty list if employee is not found
 	        } 
@@ -225,8 +259,31 @@ public class TaskService {
     }*/
 	 
 	 
+	
+	public List<TaskDTO> getTasksByStatus(int empId, Predicate<Task> filter) {
+	    Optional<Employee> employee = employeeRepository.findById(empId);
+	    if (employee.isPresent()) {
+	        List<TaskDTO> taskList = assignmentMappingRepository.findProjectsByEmployeeId(employee.get().getEmployeeId())
+	                .stream()
+	                .flatMap(project -> project.getTasks().stream())
+	                .filter(filter) // Filter tasks based on the provided predicate
+	                .map(task -> {
+	                    TaskDTO taskDTO = mapper.map(task, TaskDTO.class);
+	                    taskDTO.setProjectId(task.getProject().getProjectId());
+	                    taskDTO.setEmployeeId(empId);
+	                    return taskDTO;
+	                })
+	                .collect(Collectors.toList());
+
+	        return taskList;
+	    } else {
+	        return Collections.emptyList(); // return an empty list if employee is not found
+	    }
+	}
 	 
 }
+
+
 
 
 

@@ -2,7 +2,7 @@ package com.sprinthub.controller;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -105,20 +106,45 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
     @PostMapping("/{taskId}/assign/{employeeId}")
     public ResponseEntity<?> assignTaskToEmployee(
             @PathVariable int taskId,
-            @PathVariable int employeeId) {
+            @PathVariable int employeeId){
         return taskService.assignTaskToEmployee(taskId, employeeId);
     }
 
 
 	//getting the tasks based on the status :
-		@GetMapping("/status/{status}")
-		public ResponseEntity<List<TaskDTO>> getTasksByStatus(@PathVariable Task.TaskStatus status) {
-		    List<Task> tasks = taskService.getTasksByStatus(status);
-		    List<TaskDTO> taskDTOs = tasks.stream()
-		            .map(this::convertToDTO)
-		            .collect(Collectors.toList());
+		@GetMapping("/status/{status}/{employeeId}")
+		public List<TaskDTO> getTasksByStatus(@PathVariable Task.TaskStatus status , @PathVariable int employeeId) {
+//		    List<Task> tasks = taskService.getTasksByStatus(status);
+//		    List<TaskDTO> taskDTOs = tasks.stream()
+//		            .map(this::convertToDTO)
+//		            .collect(Collectors.toList());
+//		
+//		    return new ResponseEntity<>(taskDTOs, HttpStatus.OK);
+			//Task.TaskStatus.BACKLOG.name();
+			List<TaskDTO> tasks  = null ;
+			switch(status.name()){
+			case "BACKLOG": 
+				Predicate<Task> backlogFilter = task -> task.getStatus() == Task.TaskStatus.BACKLOG;
+				tasks = taskService.getTasksByStatus(employeeId, backlogFilter);
+				break;
+			case "ACTIVE" :
+				Predicate<Task> activeFilter = task -> task.getStatus() == Task.TaskStatus.ACTIVE;
+				tasks = taskService.getTasksByStatus(employeeId, activeFilter);
+				break;
+			case "REVIEWING" :
+				Predicate<Task> reviewingFilter = task -> task.getStatus() == Task.TaskStatus.REVIEWING;
+				tasks = taskService.getTasksByStatus(employeeId, reviewingFilter);
+				break;
+			case "DONE" :
+				Predicate<Task> doneFilter = task -> task.getStatus() == Task.TaskStatus.DONE;
+				tasks = taskService.getTasksByStatus(employeeId, doneFilter);
+				break;
+			}
+			
+			
+
+			return tasks;
 		
-		    return new ResponseEntity<>(taskDTOs, HttpStatus.OK);
 		}
 
 		private TaskDTO convertToDTO(Task task) {
@@ -137,13 +163,23 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
 		}
 		
 		
-		@PutMapping("/{taskId}/{status}")
+		@PatchMapping("/{taskId}/{status}/{employeeId}")
 	    public ResponseEntity<String> updateTaskStatus(
 	            @PathVariable int taskId,
-	            @PathVariable TaskStatus status
+	            @PathVariable TaskStatus status,
+	            @PathVariable int employeeId 
 	    ) {
-	        Task updatedTask = taskService.updateTaskStatus(taskId, status);
-	        return ResponseEntity.ok("Task status updated to: " + updatedTask.getStatus());
+			
+			 boolean updated = taskService.updateTaskStatus(taskId, status, employeeId);
+		        if (updated) {
+		            return ResponseEntity.ok("Task status updated successfully.");
+		        } else {
+		            return ResponseEntity.notFound().build();
+		        }
+				/*
+				 * Task updatedTask = taskService.updateTaskStatus(taskId, status); return
+				 * ResponseEntity.ok("Task status updated to: " + updatedTask.getStatus());
+				 */
 	    }
 
 		

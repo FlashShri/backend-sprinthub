@@ -129,13 +129,15 @@ public class ProjectServiceController {
 	        return new ResponseEntity<>(projects, HttpStatus.OK);
 	    }    
     
-	 @GetMapping("/getproject/{managerId}")
+	 @GetMapping("/getProject/{managerId}")
 	 public ResponseEntity<List<Project>> getProjectsByManagerId(@PathVariable int managerId) {
 	        List<Project> projects = projectService.getProjectsByManagerId(managerId);
 	        
 	        if (projects.isEmpty()) {
 	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	        }
+	        
+	        
 	        
 	        return new ResponseEntity<>(projects, HttpStatus.OK);
 	    }  
