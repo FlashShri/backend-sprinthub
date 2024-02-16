@@ -1,5 +1,6 @@
 package com.sprinthub.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +46,7 @@ public class ProjectService {
 		
 		// map dto to project class
 		Project project= mapper.map(dto, Project.class);
+		project.setCreateDate(LocalDate.now());
 		
 		projectRepository.save(project);
 	}
