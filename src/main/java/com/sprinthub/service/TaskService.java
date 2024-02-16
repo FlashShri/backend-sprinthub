@@ -1,5 +1,6 @@
 package com.sprinthub.service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -173,19 +174,21 @@ public class TaskService {
 	 * 
 	 * task.setStatus(newStatus); return taskRepository.save(task); }
 	 */
+    
     public boolean updateTaskStatus(int taskId, TaskStatus status, int employeeId) {
-        Optional<Task> optionalTask = taskRepository.findById(taskId);
+    	
+        Optional<Task> optionalTask = taskRepository.findById(taskId); // never be null 
+        
+         Optional<Employee> employee = employeeRepository.findById(employeeId);
+         
         if (optionalTask.isPresent()) {
-            Task task = optionalTask.get();
-            
-            
-			/*
-			 * // Check if the task belongs to the specified employee if
-			 * (task.getEmployee().getEmployeeId() == employeeId) { task.setStatus(status);
-			 * taskRepository.save(task); return true; } else { // Task does not belong to
-			 * the specified employee return false; }
-			 */
-            
+        	Task task = optionalTask.get();
+
+
+        		if( status.name().equals("ACTIVE")) {
+            		task.setEmployee( employee.get()); 
+            		task.setStartTaskDate(LocalDate.now());
+            	}
             task.setStatus(status);
             taskRepository.save(task);
             
@@ -266,6 +269,7 @@ public class TaskService {
 	        List<TaskDTO> taskList = assignmentMappingRepository.findProjectsByEmployeeId(employee.get().getEmployeeId())
 	                .stream()
 	                .flatMap(project -> project.getTasks().stream())
+	                .filter(task -> task.getEmployee() == null || task.getEmployee().getEmployeeId() == empId) // Filter tasks with no employee or matching employee ID
 	                .filter(filter) // Filter tasks based on the provided predicate
 	                .map(task -> {
 	                    TaskDTO taskDTO = mapper.map(task, TaskDTO.class);

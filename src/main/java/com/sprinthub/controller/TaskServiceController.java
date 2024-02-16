@@ -118,13 +118,7 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
 	//getting the tasks based on the status :
 		@GetMapping("/status/{status}/{employeeId}")
 		public List<TaskDTO> getTasksByStatus(@PathVariable Task.TaskStatus status , @PathVariable int employeeId) {
-//		    List<Task> tasks = taskService.getTasksByStatus(status);
-//		    List<TaskDTO> taskDTOs = tasks.stream()
-//		            .map(this::convertToDTO)
-//		            .collect(Collectors.toList());
-//		
-//		    return new ResponseEntity<>(taskDTOs, HttpStatus.OK);
-			//Task.TaskStatus.BACKLOG.name();
+
 			List<TaskDTO> tasks  = null ;
 			switch(status.name()){
 			case "BACKLOG": 
@@ -144,11 +138,7 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
 				tasks = taskService.getTasksByStatus(employeeId, doneFilter);
 				break;
 			}
-			
-			
-
 			return tasks;
-		
 		}
 
 		private TaskDTO convertToDTO(Task task) {
