@@ -83,7 +83,11 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
     
-
+    @GetMapping("/project/{project_id}")
+    public ResponseEntity<List<TaskDTO>> getTasksByProjectId(@PathVariable int project_id) {
+        List<TaskDTO> tasks = taskService.getTasksByProjectId(project_id);
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
+    }
     
 
     @DeleteMapping("/{taskId}")
@@ -176,10 +180,6 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
 		        } else {
 		            return ResponseEntity.notFound().build();
 		        }
-				/*
-				 * Task updatedTask = taskService.updateTaskStatus(taskId, status); return
-				 * ResponseEntity.ok("Task status updated to: " + updatedTask.getStatus());
-				 */
 	    }
 
 		
