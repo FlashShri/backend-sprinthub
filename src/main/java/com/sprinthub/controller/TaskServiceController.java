@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +28,8 @@ import com.sprinthub.entity.Task.TaskStatus;
 import com.sprinthub.service.TaskService;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/tasks")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3000/employee-dashboard"})
 public class TaskServiceController {
 
     private final TaskService taskService;
@@ -37,6 +38,9 @@ public class TaskServiceController {
     public TaskServiceController(TaskService taskService) {
         this.taskService = taskService;
     }
+    
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     /*    @GetMapping
     public ResponseEntity<List<Task>> getAllTasks() {
@@ -163,16 +167,22 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
 	            @PathVariable TaskStatus status,
 	            @PathVariable int employeeId 
 	    ) {
-			
 			 boolean updated = taskService.updateTaskStatus(taskId, status, employeeId);
+			 
 		        if (updated) {
+		            Optional<TaskDTO> updatedTaskDTO = taskService.getTaskDTOById(taskId); // Fetch the updated task
+		            sendTaskStatusUpdate(updatedTaskDTO.orElse(null));
 		            return ResponseEntity.ok("Task status updated successfully.");
+
 		        } else {
 		            return ResponseEntity.notFound().build();
 		        }
 	    }
-
 		
+	    // Send WebSocket notification for task status update
+	    private void sendTaskStatusUpdate(TaskDTO task) {
+	        messagingTemplate.convertAndSend("/topic/taskStatusUpdates", task);
+	    }
 }
 
 

@@ -297,6 +297,7 @@ public class TaskService {
         for(Task t: tasks){
         	if (t.getEmployee() != null) {
                 employeeName[i] = t.getEmployee().getFullName();
+                System.out.println(employeeName[i]);
             } else {
                 employeeName[i] = "null";
             }
@@ -312,6 +313,7 @@ public class TaskService {
         for (TaskDTO td : dtoList) {
         	td.setEmployeeName(employeeName[j]);
         	td.setProjectName(projectName[j]);
+        	j++;
         }
         
         return dtoList;
