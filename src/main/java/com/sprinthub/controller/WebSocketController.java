@@ -5,6 +5,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import com.sprinthub.entity.Project;
 import com.sprinthub.entity.Task;
 
 @Controller
@@ -22,6 +23,15 @@ public class WebSocketController {
         return task;
     }
     
+    
+    @MessageMapping("/sendProjectAssignmentUpdate")
+    @SendTo("/topic/projectAssignmentUpdate")
+    public Project sendProjectAssignmentUpdate(Project project) {
+
+        messagingTemplate.convertAndSend("/topic/projectAssignmentUpdate", project);
+
+        return project;
+    }
     
     
 }

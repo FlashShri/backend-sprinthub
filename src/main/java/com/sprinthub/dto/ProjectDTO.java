@@ -5,8 +5,18 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.sprinthub.entity.Manager;
+import com.sprinthub.entity.Task.TaskStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
+@Getter
+@Setter
+@ToString
 public class ProjectDTO {
 
 
@@ -18,7 +28,6 @@ public class ProjectDTO {
 	
 	
 	private Manager manager;
-
 
 	public ProjectDTO(int id, String projectTitle, String projectDescription, LocalDate createDate, Manager manager) {
 		super();

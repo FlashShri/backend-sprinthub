@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sprinthub.dto.PostProjectDTO;
 import com.sprinthub.dto.ProjectDTO;
 import com.sprinthub.dto.ProjectStatus;
+import com.sprinthub.dto.TaskDTO;
+import com.sprinthub.entity.Manager;
 import com.sprinthub.entity.Project;
 import com.sprinthub.exception.ProjectException;
 import com.sprinthub.service.ProjectService;
@@ -29,6 +32,9 @@ public class ProjectServiceController {
 
     @Autowired
     private ProjectService projectService;
+    
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
    
     @PostMapping("/project")
@@ -147,7 +153,17 @@ public class ProjectServiceController {
 	    public ProjectStatus assignManagerToProject(
 	            @PathVariable int projectId,
 	            @PathVariable int managerId) {
-	        return projectService.assignManagerToProject(projectId, managerId);
+
+	        ProjectStatus status = projectService.assignManagerToProject(projectId, managerId);
+			 Optional<ProjectDTO> updatedProjectDTO = projectService.getProjectDTOById(projectId); // Fetch the updated task
+			 sendProjectAssignmentUpdate(updatedProjectDTO.orElse(null));
+			 return status;
+	        
+	    }
+	 
+	 
+	    private void sendProjectAssignmentUpdate(ProjectDTO project) {
+	        messagingTemplate.convertAndSend("/topic/projectAssignmentUpdate", project);
 	    }
 	 
 }
