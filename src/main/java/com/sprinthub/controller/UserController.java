@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sprinthub.entity.Admin;
+import com.sprinthub.dto.LoginDTO;
 import com.sprinthub.entity.AuthRequest;
 import com.sprinthub.entity.UserInfo;
 import com.sprinthub.exception.adminServiceException;
+import com.sprinthub.repository.UserInfoRepository;
 import com.sprinthub.service.JwtService;
 import com.sprinthub.service.UserInfoService; 
  
@@ -36,6 +37,8 @@ public class UserController {
   
     @Autowired
     private AuthenticationManager authenticationManager; 
+    
+   
   
     @GetMapping("/welcome") 
     public String welcome() { 
@@ -75,13 +78,20 @@ public class UserController {
     } 
   
     @PostMapping("/generateToken") 
-    public String authenticateAndGetToken(@RequestBody AuthRequest authRequest) { 
+    public LoginDTO authenticateAndGetToken(@RequestBody AuthRequest authRequest) { 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())); 
         if (authentication.isAuthenticated()) { 
-            return jwtService.generateToken(authRequest.getUsername()); 
+        	 String token = jwtService.generateToken(authRequest.getUsername()); 
+        	 
+        	 LoginDTO ldto  = service.getUserData(authRequest.getUsername() );
+        	 
+        	 ldto.setToken(token);
+            return ldto ;
         } else { 
             throw new UsernameNotFoundException("invalid user request !"); 
         } 
     } 
+    
+    
   
 }
