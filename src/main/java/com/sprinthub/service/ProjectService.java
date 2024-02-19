@@ -15,10 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sprinthub.dto.PostProjectDTO;
 import com.sprinthub.dto.ProjectDTO;
 import com.sprinthub.dto.ProjectStatus;
+import com.sprinthub.dto.TaskDTO;
 import com.sprinthub.entity.AssignmentMapping;
 import com.sprinthub.entity.Employee;
 import com.sprinthub.entity.Manager;
 import com.sprinthub.entity.Project;
+import com.sprinthub.entity.Task;
 import com.sprinthub.exception.ProjectException;
 import com.sprinthub.repository.EmployeeRepository;
 import com.sprinthub.repository.ManagerRepository;
@@ -170,6 +172,22 @@ public class ProjectService {
 		return projectList;
 		
 	}
+
+
+	public Optional<ProjectDTO> getProjectDTOById(int projectId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        return project.map(this::convertToDTO);
+	}
+	
+    private ProjectDTO convertToDTO(Project project) {
+    	ProjectDTO dto = new ProjectDTO();
+        dto.setId(project.getProjectId());
+        dto.setProjectTitle(project.getProjectTitle());
+        dto.setProjectDescription(project.getProjectDescription());
+        dto.setCreateDate(project.getCreateDate());
+        dto.setManager(project.getManager());
+        return dto;
+    }
 }
 	
 
