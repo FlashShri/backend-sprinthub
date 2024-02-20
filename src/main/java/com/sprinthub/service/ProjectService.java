@@ -87,15 +87,8 @@ public class ProjectService {
             // Update title field of existingDesignation with data from updatedDesignation
         	// map dto to project class
 			Project updatedProject= mapper.map(dto, Project.class);
+			updatedProject.setCreateDate( existingProject.getCreateDate());
         	
-			/*
-			 * existingProject.setProjectTitle(updatedProject.getProjectTitle());
-			 * 
-			 * existingProject.setManager(updatedProject.getManager());
-			 * existingProject.setCreateDate(updatedProject.getCreateDate());
-			 * existingProject.setProjectEmployeeMappings(updatedProject.
-			 * getProjectEmployeeMappings());
-			 */
 			updatedProject.setProjectId(id);
 			 
             projectRepository.save(updatedProject);
