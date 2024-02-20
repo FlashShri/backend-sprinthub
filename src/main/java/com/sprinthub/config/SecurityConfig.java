@@ -103,9 +103,13 @@ public class SecurityConfig {
 	    corsConfiguration.setMaxAge (3600L) ;
 	    
 	    source.registerCorsConfiguration ( "/",corsConfiguration) ;
+	    source.registerCorsConfiguration("/ws/**", corsConfiguration); // Allow CORS for WebSocket endpoint
+	    
 	    
 	    FilterRegistrationBean bean = new FilterRegistrationBean<>(new CorsFilter(source));
 		return bean;
 		
     }
 } 
+
+

@@ -39,6 +39,7 @@ public class ManagerServiceController {
     }
 
     
+    
     @GetMapping("/manager")
     public ResponseEntity<Manager> getAdminByEmailAndPassword(
         @RequestParam String email,
@@ -60,7 +61,10 @@ public class ManagerServiceController {
         return managerService.getManagerById(id);
     }
    	
+   	
+   	
    	@GetMapping
+	@Secured("Manager")
     public ResponseEntity<List<ManagerDTO>> getAllManagers() {
         List<ManagerDTO> managerDTOs = managerService.getAllManagers();
         return new ResponseEntity<>(managerDTOs, HttpStatus.OK);

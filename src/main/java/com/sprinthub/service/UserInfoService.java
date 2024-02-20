@@ -4,6 +4,7 @@ package com.sprinthub.service;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -44,6 +45,9 @@ public class UserInfoService implements UserDetailsService {
     
     @Autowired
     private UserInfoRepository userRepository ;
+    
+    @Autowired
+    private ModelMapper mapper ;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -66,9 +70,13 @@ public class UserInfoService implements UserDetailsService {
         // Simultaneously save to role-specific table based on the role
         switch (role.toLowerCase()) {
             case "admin":
-                Admin admin = new Admin();
-                admin.setEmail(userInfo.getEmail()); // assuming email is used as adminName
-                admin.setPassword(userInfo.getPassword());
+				/*
+				 * Admin admin = new Admin(); admin.setEmail(userInfo.getEmail()); // assuming
+				 * email is used as adminName admin.setPassword(userInfo.getPassword());
+				 * admin.setFullName( userInfo.getFullName()) ;
+				 */
+                
+                Admin admin =  mapper.map(userInfo, Admin.class);
                 
                 
                  obj =  adminRepository.save(admin);
@@ -76,16 +84,25 @@ public class UserInfoService implements UserDetailsService {
                 break;
            
             case "manager":
-                Manager manager = new Manager();
-                manager.setEmail(userInfo.getEmail()); // assuming email is used as adminName
-                manager.setPassword(userInfo.getPassword());
+				/*
+				 * Manager manager = new Manager(); manager.setEmail(userInfo.getEmail()); //
+				 * assuming email is used as adminName
+				 * manager.setPassword(userInfo.getPassword());
+				 */
+                
+                Manager manager=  mapper.map(userInfo, Manager.class);
+                
                 obj =  managerRepository.save(manager);
                 break;    
                 
-            case "empolyee":
-                Employee employee = new Employee();
-                employee.setEmail(userInfo.getEmail()); // assuming email is used as adminName
-                employee.setPassword(userInfo.getPassword());
+            case "employee":
+				/*
+				 * Employee employee = new Employee(); employee.setEmail(userInfo.getEmail());
+				 * // assuming email is used as adminName
+				 * employee.setPassword(userInfo.getPassword());
+				 */
+                
+                 Employee employee = mapper.map(userInfo, Employee.class);
                 obj = employeeRepository.save(employee);
                 break;   
                 
@@ -102,15 +119,41 @@ public class UserInfoService implements UserDetailsService {
 	public LoginDTO getUserData(String email) {
 		// TODO Auto-generated method stub
 		
-	 	Optional<UserInfo> user = userRepository.findByEmail(email);
+		Optional<UserInfo> user = userRepository.findByEmail(email);
+	 	
+	 	 
 	 	
 	 	 UserInfo u = user.get();
+	 		 
 	 	 LoginDTO ldto = new LoginDTO();
 	 	 ldto.setRole(u.getRole());
-	 	 ldto.setId(u.getId());
+	 	
 	 	 
 	 	 
-		
+	 	   String role = u.getRole() ; 
+	 	   
+	 	  switch (role.toLowerCase()) {
+          case "admin": 
+        	  Optional<Admin> admin = adminRepository.findByEmail(email);
+        	  Admin a = admin.get();	 
+        	  ldto.setId(a.getAdminId());
+        	  
+        	  break ;
+          case "manager": 
+        	  Optional<Manager> manager = managerRepository.findByEmail(email);
+        	  Manager m =manager.get();	 
+        	  ldto.setId(m.getManagerId());
+        	  break ;
+          case "employee" : 
+        	  Optional<Employee> emp = employeeRepository.findByEmail(email);
+        	  Employee e  =emp.get();	 
+        	  ldto.setId(e.getEmployeeId());
+        	  break ;
+          default :
+        	  break ;
+	 	   }
+	 	 
+
 		return ldto;
 	}
 }
