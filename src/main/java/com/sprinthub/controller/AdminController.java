@@ -22,7 +22,7 @@ import com.sprinthub.exception.adminServiceException;
 import com.sprinthub.service.AdminService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins="http://localhost:3000")
 @RequestMapping("/admins")
 public class AdminController {
 
@@ -40,12 +40,12 @@ public class AdminController {
     }
     
     @GetMapping("/getBy/{id}")
-    @Secured("Admin") 
+   // @Secured("Admin") 
     public ResponseEntity<Admin> getAdminById(@PathVariable Integer id) {
         Optional<Admin> admin = adminService.getAdminById(id);
         return admin.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+    } 
 
     @GetMapping("/{email}")
     public ResponseEntity<Admin> getAdminByEmail(@PathVariable String email) {

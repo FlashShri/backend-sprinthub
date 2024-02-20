@@ -39,7 +39,6 @@ public class ProjectServiceController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-   
     @PostMapping
     @Secured("Admin") 
     public ResponseEntity<ProjectStatus> addDesignation(@RequestBody PostProjectDTO dto) {
@@ -155,19 +154,21 @@ public class ProjectServiceController {
 	        return new ResponseEntity<>(projects, HttpStatus.OK);
 	    }
 	 
-	 @PostMapping("/{projectId}/assign-manager/{managerId}")
+	 @GetMapping("/{projectId}/assign-manager/{managerId}")
+	 @Secured("Admin")
 	    public ProjectStatus assignManagerToProject(
 	            @PathVariable int projectId,
 	            @PathVariable int managerId) {
+		 
+		 System.out.println( projectId +" "+ managerId);
 
 	        ProjectStatus status = projectService.assignManagerToProject(projectId, managerId);
 			 Optional<ProjectDTO> updatedProjectDTO = projectService.getProjectDTOById(projectId); // Fetch the updated task
 			 sendProjectAssignmentUpdate(updatedProjectDTO.orElse(null));
 			 return status;
-	        
 	    }
 	 
-	 
+
 	    private void sendProjectAssignmentUpdate(ProjectDTO project) {
 	        messagingTemplate.convertAndSend("/topic/projectAssignmentUpdate", project);
 	    }
