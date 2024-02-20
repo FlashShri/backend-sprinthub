@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sprinthub.dto.PostProjectDTO;
@@ -27,7 +29,8 @@ import com.sprinthub.exception.ProjectException;
 import com.sprinthub.service.ProjectService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins="http://localhost:3000")
+@RequestMapping("/project")
 public class ProjectServiceController {
 
     @Autowired
@@ -37,7 +40,8 @@ public class ProjectServiceController {
     private SimpMessagingTemplate messagingTemplate;
 
    
-    @PostMapping("/project")
+    @PostMapping
+    @Secured("Admin") 
     public ResponseEntity<ProjectStatus> addDesignation(@RequestBody PostProjectDTO dto) {
         try {
             projectService.addProject(dto);
@@ -71,7 +75,8 @@ public class ProjectServiceController {
 	
     
     
-    @GetMapping("/projects")
+    @GetMapping
+    @Secured("Admin") 
     public ResponseEntity<Object> getAllProjects() {
         try {
             List<ProjectDTO> projects = projectService.getAllProjects();
@@ -100,7 +105,8 @@ public class ProjectServiceController {
 	        }
 	    }
 	 
-	 @PutMapping("/project/{id}")
+	 @PatchMapping("/{id}")
+	 @Secured("Admin") 
 	 public ResponseEntity<ProjectStatus> updateProject(@PathVariable int id, @RequestBody PostProjectDTO updatedProject) {
 	     try {
 	         projectService.updateProject(id, updatedProject);

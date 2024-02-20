@@ -77,8 +77,9 @@ public class AdminController {
     }
 
     
-    @CrossOrigin(origins = "http://localhost:3000")
+    //@CrossOrigin(origins = "http://localhost:3000")
     @PutMapping("/{adminId}")
+    @Secured("Admin") 
     public ResponseEntity<Object> updateAdmin(@PathVariable int adminId, @RequestBody Admin updatedAdmin) {
         Admin admin = adminService.updateAdmin(adminId, updatedAdmin);
         return admin != null ?
