@@ -25,7 +25,7 @@ public class UserInfo {
 	private long phoneNumber;
 	private String city;
     
-    private String roles; 
+    private String role; 
 
   
 } 
