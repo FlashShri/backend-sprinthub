@@ -46,7 +46,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { 
         return http.csrf().disable() 
                 .authorizeHttpRequests() 
-                .requestMatchers("/auth/welcome", "/auth/register", "/auth/generateToken").permitAll() 
+                .requestMatchers("/auth/welcome", "/auth/register", "/auth/generateToken", "/ws/**").permitAll() 
                 .and() 
                 .authorizeHttpRequests().requestMatchers("/auth/user/**").authenticated() 
                 .and() 
@@ -110,6 +110,8 @@ public class SecurityConfig {
 		return bean;
 		
     }
+    
+    //socket is working now
 } 
 
 
