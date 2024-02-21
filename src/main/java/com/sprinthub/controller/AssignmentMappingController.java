@@ -31,6 +31,8 @@ public class AssignmentMappingController {
             @PathVariable("employeeId") int employeeId,
             @PathVariable("projectId") int projectId) {
         try {
+        	
+        	System.out.println( employeeId) ;
             AssignmentMapping assignmentMapping = assignmentMappingService.mapEmployeeToProject(employeeId, projectId);
             return new ResponseEntity<>(assignmentMapping, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
