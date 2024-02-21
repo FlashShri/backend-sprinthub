@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sprinthub.dto.ProjectDTO;
 import com.sprinthub.dto.TaskCreateDTO;
 import com.sprinthub.dto.TaskDTO;
 import com.sprinthub.dto.TaskDeleteStatus;
@@ -84,6 +85,9 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
     @PostMapping("/{project_id}")
     public ResponseEntity<TaskDTO> saveTask(@RequestBody TaskCreateDTO task , @PathVariable int project_id) {
     	TaskDTO savedTask = taskService.saveTask(task , project_id);
+        Optional<TaskDTO> savedTaskDto = taskService.getTaskDTOById(savedTask.getTaskId()); // Fetch the updated task
+        sendTaskStatusUpdate(savedTaskDto.orElse(null));
+
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
     
@@ -182,6 +186,10 @@ public ResponseEntity<List<TaskDTO>> getAllTasksByEmployee(@RequestParam int emp
 	    // Send WebSocket notification for task status update
 	    private void sendTaskStatusUpdate(TaskDTO task) {
 	        messagingTemplate.convertAndSend("/topic/taskStatusUpdates", task);
+	    }
+	    
+	    private void sendTaskCreationUpdate(TaskDTO task) {
+	        messagingTemplate.convertAndSend("/topic/taskCreationUpdate", task);
 	    }
 }
 
