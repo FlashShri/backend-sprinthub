@@ -106,6 +106,7 @@ public class SecurityConfig {
 	    corsConfiguration.addAllowedHeader( "DELETE") ;
 	    corsConfiguration.addAllowedHeader("PUT") ;
 	    corsConfiguration.addAllowedHeader("OPTIONS") ;
+	    corsConfiguration.addAllowedHeader("PATCH") ;
 	    corsConfiguration.setMaxAge (3600L) ;
 	    
 	    source.registerCorsConfiguration ( "/",corsConfiguration) ;
